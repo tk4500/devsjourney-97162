@@ -1,0 +1,175 @@
+/* --- Main Container and Background --- */
+.title-screen-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Pushes top-bar up and footer down */
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+  width: 100vw;  /* Full viewport width */
+  padding: 1rem;
+  box-sizing: border-box; /* Ensures padding is included in height/width */
+  background-image: url('/background.gif');
+  background-position: center center; /* Centers the image */
+  background-repeat: no-repeat;
+  color: white;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* Makes text readable on any background */
+}
+
+.top-bar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between; /* Pushes settings left, profile right */
+  align-items: center;
+}
+.settings-button {
+  color: white !important; /* Force icon color to be visible */
+}
+.user-profile-area {
+  position: relative; /* For the menu popup */
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 30px;
+  background-color: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.user-profile:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.nickname {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.guest-avatar {
+  background-color: var(--p-surface-400);
+  color: var(--p-surface-0);
+}
+.auth-panel a {
+  cursor: pointer;
+  font-weight: bold;
+  margin: 0 0.5rem;
+}
+.auth-panel a:hover {
+  text-decoration: underline;
+}
+
+/* --- Main Content (Title and Buttons) --- */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+.game-title-img {
+  width: 80%;
+  max-width: 500px;
+  height: auto;
+}
+
+.game-title {
+  width: 80%; /* Takes 80% of the screen width on mobile */
+  max-width: 500px; /* But won't get larger than 500px on desktop */
+  height: auto; /* Maintains aspect ratio */
+  content: url('/title.png');
+}
+
+.game-button-template {
+  /* --- Container & Background Image --- */
+  background-image: url('/button.png');
+  background-size: 100% 100%; /* Stretch to fill the container perfectly */
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: none;
+  box-shadow: none;
+
+  /* --- Sizing and Shape --- */
+  /* We define a specific aspect ratio to match a typical button image */
+  width: 100%; /* Take full width of its container (.menu-buttons) */
+  aspect-ratio: 3 / 1; /* e.g., 300px wide, 100px tall. ADJUST THIS to match your button.png aspect ratio! */
+  padding: 0; /* Remove all default padding */
+
+  position: relative; /* This is CRUCIAL. It allows us to position the content inside it. */
+  transition: transform 0.1s ease-out;
+}
+
+.game-button-template:disabled:hover,
+.game-button-template:disabled:active {
+  transform: none; /* Disable press effect */
+  filter: grayscale(80%) brightness(0.7); /* Keep the same filter */
+}
+
+.game-button-template:disabled {
+  filter: grayscale(80%) brightness(0.7);
+  cursor: not-allowed;
+}
+/* --- Content (Icon and Text) Styling --- */
+
+.button-content {
+  /* This is the magic for perfect centering */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  /* Now we style the content inside */
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* Space between icon and text */
+
+  color: white;
+  font-family: 'YourGameFont', sans-serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px black;
+
+  /* This prevents the text/icon from interfering with the button click */
+  pointer-events: none;
+}
+
+/* We still need this in the .menu-buttons class */
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 300px;
+}
+
+/* Don't forget the media query for desktop layout */
+@media (min-width: 768px) {
+  .menu-buttons {
+    flex-direction: row;
+    max-width: 600px; /* Allow more space for side-by-side buttons */
+  }
+}
+/* --- Footer --- */
+.footer {
+  width: 100%;
+  text-align: center;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+
+/* --- RESPONSIVE DESIGN: Media Queries --- */
+
+/* For tablets and larger screens (e.g., screen width is 768px or more) */
+@media (min-width: 768px) {
+  .game-title {
+    max-width: 600px; /* Allow title to be a bit bigger */
+  }
+
+  .menu-buttons {
+    flex-direction: row; /* Buttons are side-by-side */
+    justify-content: center;
+    max-width: 500px;
+  }
+}

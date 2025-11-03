@@ -1,0 +1,38 @@
+
+p-card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.field {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+/* PrimeNG's w-full class is great, but sometimes we need to ensure it works inside flex containers */
+:host ::ng-deep .w-full {
+  width: 100%;
+}
+/* (Keep existing styles) */
+
+.forgot-password-link {
+  font-size: 0.9rem;
+  color: var(--primary-color); /* Uses your PrimeNG theme color */
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.forgot-password-link:hover {
+  text-decoration: underline;
+}
+
+/* Helper to get PrimeFlex's justify-content-between behavior if you don't have it installed */
+.flex { display: flex; }
+.justify-content-between { justify-content: space-between; }
+.text-center { text-align: center; }
+.mt-3 { margin-top: 1rem; }

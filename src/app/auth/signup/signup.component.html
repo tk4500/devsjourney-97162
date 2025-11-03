@@ -1,0 +1,32 @@
+<div class="auth-container">
+  <p-card header="Create an Account" subheader="Save your progress globally">
+    <!-- Email Input -->
+    <div class="field">
+      <label for="email">Email</label>
+      <input pInputText id="email" class="w-full" type="email" [(ngModel)]="email" />
+    </div>
+
+    <!-- Password Input with Strength Meter -->
+    <div class="field">
+      <label for="password">Password</label>
+      <p-password id="password" [(ngModel)]="password" [toggleMask]="true" styleClass="w-full"></p-password>
+    </div>
+
+    <!-- Confirm Password Input -->
+    <div class="field">
+      <label for="confirmPassword">Confirm Password</label>
+      <input pInputText id="confirmPassword" class="w-full" type="password" [(ngModel)]="confirmPassword" />
+    </div>
+
+    <!-- Error Message Display -->
+    <p-message *ngIf="errorMessage" severity="error" [text]="errorMessage"></p-message>
+
+    <ng-template pTemplate="footer">
+      <p-button label="Sign Up" icon="pi pi-user-plus" styleClass="w-full" [loading]="isLoading" (click)="signup()"></p-button>
+      <div class="mt-3 text-center">
+        <span>Already have an account? </span>
+        <a (click)="onSwitchToLogin()">Log In</a>
+      </div>
+    </ng-template>
+  </p-card>
+</div>

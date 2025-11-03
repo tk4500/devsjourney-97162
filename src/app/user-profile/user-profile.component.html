@@ -1,0 +1,57 @@
+<div class="profile-container">
+  <!-- VIEW MODE -->
+  <div *ngIf="!isEditMode">
+    <div class="view-header">
+      <p-avatar *ngIf="user.photoURL; else defaultAvatar"
+            [image]="user.photoURL!" shape="circle" size="xlarge"></p-avatar>
+          <ng-template #defaultAvatar>
+            <p-avatar [label]="getUserInitial(user)" shape="circle" size="xlarge"></p-avatar>
+          </ng-template>
+      <div class="view-info">
+        <h3>{{ user.displayName || 'No Nickname' }}</h3>
+        <p>{{ user.email }}</p>
+      </div>
+    </div>
+    <div class="view-actions">
+      <p-button label="Edit Profile" icon="pi pi-pencil" (click)="toggleEditMode(true)"></p-button>
+      <p-button *ngIf="!isGoogleLinked" label="Link Google Account" icon="pi pi-google" styleClass="p-button-secondary" (click)="linkGoogleAccount()" [loading]="isLoading"></p-button>
+    </div>
+  </div>
+
+  <!-- EDIT MODE -->
+  <div *ngIf="isEditMode">
+    <div class="edit-avatar-section">
+      <p-avatar *ngIf="profilePicturePreview; else defaultAvatar"
+            [image]="profilePicturePreview" shape="circle" size="xlarge"></p-avatar>
+          <ng-template #defaultAvatar>
+            <p-avatar [label]="getUserInitial(user)" shape="circle" size="xlarge"></p-avatar>
+          </ng-template>
+      <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept="image/png, image/jpeg, image/gif">
+      <p-button icon="pi pi-upload" label="Change Picture" styleClass="p-button-sm p-button-text" (click)="fileInput.click()"></p-button>
+    </div>
+
+    <div class="p-fluid">
+      <div class="field">
+        <label for="displayName">Nickname</label>
+        <input pInputText id="displayName" [(ngModel)]="newDisplayName">
+      </div>
+      <div class="field">
+        <label for="newPassword">New Password</label>
+        <p-password id="newPassword" [(ngModel)]="newPassword" [toggleMask]="true" [feedback]="false"></p-password>
+      </div>
+      <div class="field">
+        <label for="confirmPassword">Confirm New Password</label>
+        <input pInputText id="confirmPassword" type="password" [(ngModel)]="confirmPassword">
+      </div>
+    </div>
+
+    <div class="edit-actions">
+      <p-button label="Cancel" styleClass="p-button-text" (click)="toggleEditMode(false)"></p-button>
+      <p-button label="Save Changes" icon="pi pi-check" (click)="saveProfileChanges()" [loading]="isLoading"></p-button>
+    </div>
+  </div>
+
+  <!-- Feedback Messages -->
+  <p-message *ngIf="successMessage" severity="success" [text]="successMessage"></p-message>
+  <p-message *ngIf="errorMessage" severity="error" [text]="errorMessage"></p-message>
+</div>

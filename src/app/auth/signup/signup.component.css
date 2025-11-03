@@ -1,0 +1,21 @@
+/* You can rename login.component.css to a more generic name if you wish */
+
+
+p-card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.field {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+:host ::ng-deep .w-full {
+  width: 100%;
+}

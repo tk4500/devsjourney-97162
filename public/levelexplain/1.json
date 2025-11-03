@@ -1,0 +1,89 @@
+[
+  {
+    "isExplanation": true,
+    "isHidden": false,
+    "explanation": "E aí Deivison! Bem-vindo à ByteBuilders!",
+    "sergioImage": "SergioNeutro.png",
+    "isSergio": true,
+    "sergioX": 700,
+    "sergioY": 300,
+    "explanationX": 800,
+    "explanationY": 240
+  },
+  {
+    "explanation": "Eu sou o Sérgio Senior, seu TechLead."
+  },
+  {
+    "explanation": "Você está aqui para aprender e crescer como desenvolvedor.",
+    "explanationY": 220
+  },
+  {
+    "explanation": "Vamos começar com o básico...",
+    "explanationY": 240
+  },
+  {
+    "explanation": "Este é um bloco de código",
+    "sergioImage": "SergioBastão.png",
+    "sergioX": 400,
+    "sergioY": 150,
+    "explanationX": 560,
+    "explanationY": 95,
+    "sergioMirror": true
+  },
+  {
+    "explanation": "Ele é a base de como construímos programas.",
+    "explanationY": 80
+  },
+  {
+    "explanation": "Você pode utilizar ele dentro da sua area de trabalho.",
+    "sergioImage": "SergioPraBaixo.png",
+    "sergioMirror": false,
+    "explanationX": 500
+  },
+  {
+    "explanation": "Vamos praticar um pouco!",
+    "sergioImage": "SergioNeutro.png",
+    "sergioX": 600,
+    "sergioY": 200,
+    "explanationX": 700,
+    "explanationY": 150
+  },
+  {
+    "explanation": "Arraste o bloco de código para a área de trabalho.",
+    "sergioImage": "SergioBastão.png",
+    "sergioX": 250,
+    "sergioY": 150,
+    "explanationX": 0,
+    "explanationY": 75,
+    "isOver": true
+  },
+  {
+    "explanation": "Ótimo trabalho! Agora você tem seu primeiro bloco de código.",
+    "sergioMirror": true,
+    "sergioImage": "SergioNeutro.png"
+  },
+  {
+    "explanation": "Vamos tentar rodar esse bloco de código.",
+    "sergioImage": "SergioPraCima.png",
+    "sergioX": 200,
+    "sergioY": 350,
+    "isRun": true,
+    "isOver": false,
+    "explanationX": 350,
+    "explanationY": 280
+  },
+  {
+    "explanation": "Clique no botão de rodar para ver o que acontece.",
+    "explanationY": 270
+  },
+  {
+    "explanation": "Parece que apenas um bloco não foi o suficiente para finalizar a Task.",
+    "sergioImage": "SergioBastão.png",
+    "isTask": true,
+    "isRun": false,
+    "sergioX": 120,
+    "sergioY": 400,
+    "explanationX": 300,
+    "explanationY": 350
+  }
+]

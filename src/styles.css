@@ -1,1 +1,9 @@
+@import "primeicons/primeicons.css";
 /* You can add global styles to this file, and also import other style files */
+@font-face {
+  font-family:'YourGameFont'; /* This is the NAME you will use in your CSS */
+  src: url('/ModernDos.ttf') format('truetype');
+  font-weight: normal; /* Specifies this file is for normal weight text */
+  font-style: normal;
+}
+

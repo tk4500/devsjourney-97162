@@ -1,0 +1,46 @@
+<div class="auth-container"> <!-- Renamed for consistency -->
+  <p-card header="Game Login" subheader="Enter your credentials">
+    <!-- Email Input -->
+    <div class="field">
+      <label for="email">Email</label>
+      <input pInputText id="email" class="w-full" type="email"
+        [(ngModel)]="email" />
+    </div>
+
+    <!-- Password Input -->
+    <div class="field">
+      <div class="flex justify-content-between">
+        <label for="password">Password</label>
+        <!-- ADD "Forgot Password?" LINK HERE -->
+        <a (click)="resetPassword()" class="forgot-password-link">Forgot
+          Password?</a>
+      </div>
+      <input pInputText id="password" class="w-full" type="password"
+        [(ngModel)]="password" (keydown.enter)="login()" />
+    </div>
+
+    <!-- Display SUCCESS or ERROR messages (not both) -->
+    <p-message *ngIf="successMessage && !errorMessage" severity="success"
+      [text]="successMessage"></p-message>
+    <p-message *ngIf="errorMessage" severity="error"
+      [text]="errorMessage"></p-message>
+
+    <ng-template pTemplate="footer">
+      <!-- Login Button -->
+      <p-button label="Login" icon="pi pi-sign-in" styleClass="w-full"
+        [loading]="isLoading" (click)="login()"></p-button>
+
+      <!-- Google Button (optional, can be removed if not needed) -->
+      <p-divider align="center" styleClass="my-3"><b>OR</b></p-divider>
+      <p-button label="Sign in with Google" icon="pi pi-google"
+        styleClass="p-button-secondary w-full" [loading]="isLoading"
+        (click)="loginWithGoogle()"></p-button>
+
+      <div class="mt-3 text-center">
+        <span>Don't have an account? </span>
+        <!-- CHANGE THIS LINE -->
+        <a (click)="onSwitchToSignup()">Sign Up</a>
+      </div>
+    </ng-template>
+  </p-card>
+</div>

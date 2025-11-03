@@ -1,0 +1,141 @@
+
+.level-select-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  height: 100vh;
+  box-sizing: border-box;
+  background-image: url('/level-select-bg.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.header {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.title-text {
+  font-family: 'YourGameFont', sans-serif;
+  font-size: clamp(2rem, 5vw, 4rem);
+  color: white;
+  text-shadow: 2px 2px 5px black;
+}
+
+.back-button {
+  width: clamp(48px, 5vw, 80px);
+  height: clamp(48px, 5vw, 80px);
+  background-image: url('/right-arrow.png'); /* Your back button asset */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transform: scaleX(-1); /* Flip the left arrow to a back arrow */
+}
+
+.placeholder { width: clamp(48px, 5vw, 80px); }
+
+.main-content {
+  flex-grow: 1;
+  display: flex; /* CHANGE: Use flexbox for the main layout */
+  justify-content: space-between; /* Pushes arrows to the sides */
+  align-items: center;
+  width: 100%;
+  max-width: 1400px; /* NEW: Add a max-width to prevent it from getting too wide on huge screens */
+  gap: 1rem; /* Adjust spacing between arrows and grid */
+}
+
+.arrow-button {
+  width: clamp(48px, 5vw, 80px);
+  height: clamp(48px, 5vw, 80px);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.arrow-button.left { background-image: url('/left-arrow.png'); }
+.arrow-button.right { background-image: url('/right-arrow.png'); }
+.arrow-button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.level-grid {
+  display: grid;
+  gap: 1rem;
+  grid-auto-rows: 1fr; /* NEW: Ensure all rows have the same height */
+
+  /* --- KEY FIX FOR SIZING --- */
+  /* We constrain the grid's size relative to the viewport height */
+  /* This prevents it from stretching uncontrollably on wide screens */
+  width: 100%;
+  max-width: 80vh; /* Set the max-width relative to the viewport height, creating a squarish container */
+  margin: 0 auto; /* Center the grid within its flex container */
+}
+
+.level-card-container {
+  aspect-ratio: 1 / 1;
+  position: relative;
+
+}
+
+.level-card {
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url('/level-card-unlocked.png');
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.level-card.locked {
+  background-image: url('/level-card-locked.png');
+  cursor: not-allowed;
+}
+.level-card.placeholder {
+  background-image: url('/level-card-placeholder.png'); /* e.g., a web or empty box */
+  cursor: default;
+}
+
+.stars-container {
+  position: absolute;
+  top: 10%;
+  width: 80%;
+  display: flex;
+  justify-content: center;
+}
+
+.star {
+  width: 25%;
+  padding-bottom: 25%; /* Creates a square aspect ratio */
+  background-image: url('/star-blue.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.star.earned {
+  background-image: url('/star-yellow.png');
+}
+
+.level-number {
+  font-family: 'YourGameFont', sans-serif;
+  font-size: clamp(2rem, 8vw, 4rem);
+  color: orange;
+  text-shadow: 2px 2px 3px black;
+  margin-top: 10%; /* Push number below stars */
+}
+
+/* Responsive grid columns */
+:host ::ng-deep .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+:host ::ng-deep .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+:host ::ng-deep .grid-cols-4 { grid-template-columns: repeat(4, 1fr); }

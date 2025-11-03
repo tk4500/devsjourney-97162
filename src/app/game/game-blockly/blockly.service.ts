@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 })
 export class BlocklyService {
   workspace: Blockly.WorkspaceSvg | null = null;
-  image = signal<string>('JuniorAnimatedNormal.gif');
+  image = signal<string>('junior_idle.jpg');
   level = signal<number>(1);
   task_focus: number = 0;
   task: Task[] = [];
@@ -36,6 +36,7 @@ export class BlocklyService {
   }
   gameOver() {
     console.log('Game Over');
+    this.changeImg('junior-fail.jpg');
     this.resetGame();
   }
   nextLevel() {
@@ -60,19 +61,19 @@ export class BlocklyService {
       this.stamina = 100;
     }
     console.log('Stamina changed:', this.stamina);
-    if (this.getImg() === 'JuniorAnimatedCoffee.gif') {
+    if (this.getImg() === 'junior-coffee.gif') {
       setTimeout(() => {
         if (this.stamina < 20) {
-          this.changeImg('JuniorAnimatedTired.gif');
+          this.changeImg('junior-tired.gif');
         } else {
-          this.changeImg('JuniorAnimatedNormal.gif');
+          this.changeImg('junior-typing.gif');
         }
       }, 1000);
     } else {
       if (this.stamina < 20) {
-        this.changeImg('JuniorAnimatedTired.gif');
+        this.changeImg('junior-tired.gif');
       } else {
-        this.changeImg('JuniorAnimatedNormal.gif');
+        this.changeImg('junior-typing.gif');
       }
     }
   }
@@ -103,6 +104,7 @@ export class BlocklyService {
           this.task_focus = 0;
           if (this.task.every(t => t.conclusion >= 100)) {
             this.won = true;
+            this.changeImg('junior-success.jpg');
             console.log('All tasks completed! You won!');
           }
         }
@@ -111,7 +113,7 @@ export class BlocklyService {
   }
 
   tomarCafe() {
-    this.changeImg('JuniorAnimatedCoffee.gif');
+    this.changeImg('junior-coffee.gif');
     this.focus = 0;
     this.changeStamina(20);
   }

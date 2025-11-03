@@ -1,4 +1,8 @@
+@import url("https://unpkg.com/primeflex@latest/primeflex.css");
 @import "primeicons/primeicons.css";
+@tailwind base;
+@tailwind components;
+
 /* You can add global styles to this file, and also import other style files */
 @font-face {
   font-family:'YourGameFont'; /* This is the NAME you will use in your CSS */
@@ -6,4 +10,15 @@
   font-weight: normal; /* Specifies this file is for normal weight text */
   font-style: normal;
 }
-
+body{
+  margin: 0;
+}
+div{
+--p-panel-header-padding: 0;
+--p-panel-content-padding: 1rem;
+--p-toolbar-padding: 0;
+}
+.app-container {
+  height: 100%;
+  width: 100%;
+}

@@ -13,6 +13,7 @@ export interface Level {
   isTutorial: boolean;     // True for official levels, false for player-made
 
   // Gameplay mechanic flags and initial values
+  initialWorkspace?: string;
   initialStamina?: number;
   usesStamina?: boolean;
   initialFocus?: number;

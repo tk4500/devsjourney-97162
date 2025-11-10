@@ -1,12 +1,18 @@
 <app-game-tutorial></app-game-tutorial>
+
 <div class="game-page-container">
-    <app-top-bar></app-top-bar>
-  <div class="grid w-full h-full">
-    <div id="sidebar" class="col-3">
+  <app-top-bar></app-top-bar>
+
+  <!-- USE YOUR CUSTOM FLEXBOX LAYOUT INSTEAD OF PRIMEFLEX GRID -->
+  <main class="game-main-content">
+
+    <aside class="game-sidebar" id="sidebar">
       <app-game-status [gameplay]="gameplayService"></app-game-status>
-    </div>
-    <div class="col-9 z-5">
+    </aside>
+
+    <section class="blockly-container">
       <app-game-blockly [level]="currentLevel"></app-game-blockly>
-    </div>
-  </div>
+    </section>
+
+  </main>
 </div>

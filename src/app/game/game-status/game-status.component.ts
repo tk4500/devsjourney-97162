@@ -32,6 +32,7 @@ export class GameStatusComponent {
    * Called when the "Run Code" button is clicked.
    */
   runCode(): void {
+    this.blocklyWorkspaceService.saveWorkspace();
     const level = this.gameplay.currentLevel();
     if (!level || this.interpreterService.isRunning()) return;
 

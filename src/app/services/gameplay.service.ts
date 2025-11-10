@@ -84,9 +84,20 @@ export class GameplayService {
 
       // Handle Focus mechanic
       if (level.usesFocus) {
+
         if (this.taskFocusId === taskId) {
           this.focus.update(f => Math.min(f + 10, 100)); // Increase focus
           progressAmount += this.focus(); // Add focus bonus
+          if (level.orderId >= 8){
+            if (Math.random() < 0.25) {
+          console.log("--- INTERRUPTION! --- Focus has been reset.");
+          alert("Oh no! You got interrupted and lost your focus!");
+          this.focus.set(0);
+          this.taskFocusId = null;
+          progressAmount = 10;
+          // In the future, we could trigger a sound effect or visual alert here.
+        }
+          }
         } else {
           this.taskFocusId = taskId;
           this.focus.set(10); // Reset focus to base

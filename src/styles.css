@@ -10,3 +10,13 @@
   font-weight: normal; /* Specifies this file is for normal weight text */
   font-style: normal;
 }
+:root {
+  --bg-image: url('/level-select-bg.png');
+  --arrow-left: url('/left-arrow.png');
+  --arrow-right: url('/right-arrow.png');
+  --card-unlocked: url('/level-card-unlocked.png');
+  --card-locked: url('/level-card-locked.png');
+  --card-placeholder: url('/level-card-placeholder.png');
+  --star-earned: url('/star-yellow.png');
+  --star-empty: url('/star-blue.png');
+}

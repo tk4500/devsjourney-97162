@@ -13,18 +13,18 @@
   </div>
 
   <!-- Main Action Button -->
-  <div class="action-section">
-    <button
-      pButton
-      pRipple
-      id="run-button"
-      label="Run Code"
-      icon="pi pi-play"
-      class="p-button-success p-button-lg"
-      (click)="runCode()"
-      [disabled]="interpreterService.isRunning() || gameplay.hasWon() || gameplay.hasFailed()">
-    </button>
-  </div>
+<div class="action-section">
+  <button
+    pButton
+    pRipple
+    id="run-button"
+    label="Run Code"
+    icon="pi pi-play"
+    styleClass="run-code-button"
+    (click)="runCode()"
+    [disabled]="interpreterService.isRunning() || gameplay.hasWon() || gameplay.hasFailed()">
+  </button>
+</div>
 
   <!-- Tasks & Focus Section -->
   <div class="tasks-section">

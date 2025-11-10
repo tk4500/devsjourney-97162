@@ -16,6 +16,13 @@ export class BlocklyWorkspaceService implements OnDestroy {
   ngOnDestroy(): void {
     this.disposeWorkspace();
   }
+  saveWorkspace() {
+    if (!this.workspace) {
+      console.warn("[BlocklyWorkspaceService] saveWorkspace called before workspace is created.");
+      return;
+    }
+    console.log(Blockly.serialization.workspaces.save(this.workspace));
+  }
 
   /**
    * Creates and injects a new Blockly workspace into a given DOM element.
@@ -47,6 +54,16 @@ export class BlocklyWorkspaceService implements OnDestroy {
       move: { scrollbars: true, drag: true, wheel: true },
       renderer: 'zelos' // A modern, nice-looking renderer.
     });
+
+    if (level.initialWorkspace) {
+      try {
+        const workspaceJson = JSON.parse(level.initialWorkspace);
+        Blockly.serialization.workspaces.load(workspaceJson, this.workspace);
+      } catch (error) {
+        console.error("[BlocklyWorkspaceService] Failed to load initial workspace:", error);
+      }
+    }
+
   }
 
   /**
@@ -82,10 +99,35 @@ export class BlocklyWorkspaceService implements OnDestroy {
    */
   private createToolbox(availableBlocks: string[]): Blockly.utils.toolbox.ToolboxDefinition {
     // We can add categories later if needed. For now, a simple list is fine.
-    const contents = availableBlocks.map(blockType => ({
-      kind: 'block',
-      type: blockType
-    }));
+    const contents = availableBlocks.map(blockType => {
+
+      // --- THE FIX IS HERE ---
+      // If the block is our custom 'dev_task', provide a more complex
+      // definition that includes a shadow block for the input.
+      if (blockType === 'dev_task') {
+        return {
+          kind: 'block',
+          type: 'dev_task',
+          inputs: {
+            // The key 'TASK_ID' must match the 'name' of the input_value in the block's JSON definition.
+            TASK_ID: {
+              shadow: {
+                type: 'math_number', // The type of the default block we want.
+                fields: {
+                  NUM: 1 // The default value for the 'NUM' field inside the math_number block.
+                }
+              }
+            }
+          }
+        };
+      }
+
+      // For all other blocks, return the simple definition as before.
+      return {
+        kind: 'block',
+        type: blockType
+      };
+    });
 
     return {
       kind: 'flyoutToolbox',

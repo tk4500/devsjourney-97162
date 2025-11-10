@@ -3,25 +3,28 @@
   flex-direction: column;
   height: 100vh;
   width: 100vw;
-  overflow: hidden; /* Prevent scrollbars on the main page */
+  overflow: hidden;
+  background-color: #111827; /* A solid, dark background for the whole page */
 }
 
 .game-main-content {
-  flex-grow: 1; /* Take up all space below the top bar */
+  flex-grow: 1;
   display: flex;
-  height: calc(100% - 6rem); /* Adjust 6rem to match your top-bar height */
+  height: calc(100% - 6rem); /* Assumes top-bar is 6rem high */
 }
 
 .game-sidebar {
   width: 30%;
-  max-width: 400px;
-  min-width: 300px;
-  padding: 1rem;
-  background-color: #0f172a; /* A darker sidebar color */
-  overflow-y: auto; /* Allow sidebar to scroll if content is too long */
+  max-width: 450px; /* Increased max-width slightly */
+  min-width: 320px;
+  padding: 1.5rem; /* Increased padding */
+  background-color: #111827; /* Darker sidebar color from mockup */
+  overflow-y: auto;
+  border-right: 2px solid #374151; /* Add a separator line */
 }
 
 .blockly-container {
   flex-grow: 1;
-  position: relative; /* Needed for Blockly's UI elements */
+  position: relative;
+  background-color: #E5E7EB; /* Light background for the Blockly area */
 }

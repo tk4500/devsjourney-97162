@@ -83,14 +83,6 @@ private loadBlockFromCache(blockName: string): CustomBlock | null {
     }
   }
 
-  private loadCache(): void {
-    const cache = localStorage.getItem('blockly_custom_blocks');
-    if (cache) {
-      const blockNames = JSON.parse(cache);
-      blockNames.forEach((name: string) => this.definedBlocks.add(name));
-    }
-  }
-
   private saveToCache(blockName: string): void {
     this.definedBlocks.add(blockName);
     localStorage.setItem('blockly_custom_blocks', JSON.stringify(Array.from(this.definedBlocks)));

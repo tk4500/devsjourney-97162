@@ -30,7 +30,7 @@
   <div class="tasks-section">
     <h4>Objectives</h4>
     <div *ngFor="let task of gameplay.tasks()" class="task-card">
-      <span>{{ task.name }}</span>
+      <span>{{ task.name }}, {{ task.completion() }}%</span>
       <p-progressBar [value]="task.completion()" [showValue]="false"></p-progressBar>
     </div>
     <div class="focus-card" *ngIf="level.usesFocus">
@@ -43,12 +43,12 @@
   <div class="resource-section">
     <div *ngIf="level.usesStamina" class="resource-bar" pTooltip="Energy to write code. Restored by drinking coffee.">
       <span>Stamina</span>
-      <p-progressBar [value]="gameplay.stamina()"></p-progressBar>
+      <p-progressBar class="stamina-bar" [value]="gameplay.stamina()"></p-progressBar>
     </div>
     <!-- Placeholder for Time if you implement it -->
     <div *ngIf="level.usesTime" class="resource-bar">
       <span>Time</span>
-      <p-progressBar [value]="0"></p-progressBar>
+      <p-progressBar class="time-bar" [value]="0"></p-progressBar>
     </div>
   </div>
 

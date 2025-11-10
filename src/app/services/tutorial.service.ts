@@ -27,7 +27,8 @@ export class TutorialService {
     this.tutorialEvents$.subscribe(eventName => {
       const step = this.currentStep();
       if (this.isTutorialActive() && step && step.nextOn === eventName) {
-        this.nextStep();
+        console.log(`[TutorialService] Event '${eventName}' matched. Advancing tutorial.`);
+        this.nextStep(true);
       }
     });
   }
@@ -55,13 +56,15 @@ export class TutorialService {
     }
   }
 
-  public nextStep(): void {
+  public nextStep(force: boolean = false): void {
     const current = this.currentStep();
     // If the current step is waiting for a click, advance.
-    if (this.isTutorialActive() && (!current?.nextOn || current.nextOn === 'click')) {
+    if (this.isTutorialActive() && (force || !current?.nextOn || current.nextOn === 'click')) {
       this.currentStepIndex++;
       if (this.currentStepIndex < this.steps.length) {
         this.currentStep.set(this.steps[this.currentStepIndex]);
+        console.log(`[TutorialService] Advanced to step ${this.currentStepIndex + 1}/${this.steps.length}.`);
+        console.log(this.currentStep());
       } else {
         this.endTutorial();
       }

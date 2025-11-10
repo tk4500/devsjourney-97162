@@ -1,6 +1,6 @@
 import { Component, inject, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import * as Blockly from 'blockly/core';
 import { BlocklyWorkspaceService } from '../../services/blockly-workspace.service';
 import { Level } from '../../models/level.model';
 import { TutorialService } from '../../services/tutorial.service'; // For tutorial triggers
@@ -40,16 +40,22 @@ export class GameBlocklyComponent implements OnChanges, OnDestroy {
   }
 
   private addBlocklyEventListener(): void {
-    if (this.blocklyWorkspaceService.workspace) {
+  if (this.blocklyWorkspaceService.workspace) {
+      // Remove any old listener first to be safe
+      if (this.onBlocklyEvent) {
+        this.blocklyWorkspaceService.workspace.removeChangeListener(this.onBlocklyEvent);
+      }
+
       this.onBlocklyEvent = (event: any) => {
         // Check for an event that signifies a block was created/placed by the user
-        if (event.type === 'create' && event.blockId) {
-          // A new block was dragged from the toolbox or duplicated
+        if (event.type === Blockly.Events.CREATE && event.blockId) {
           const block = this.blocklyWorkspaceService.workspace?.getBlockById(event.blockId);
-          if (block) {
-            // Emit a generic event and a specific one with the block type
-            this.tutorialService.tutorialEvents$.next('blockPlaced');
-            this.tutorialService.tutorialEvents$.next(`blockPlaced:${block.type}`);
+          if (block && !block.isInFlyout) { // Make sure it's on the main workspace
+            // --- EMIT THE EVENTS ---
+            const eventName = `blockPlaced:${block.type}`;
+            console.log(`[GameBlocklyComponent] Emitting '${eventName}' event.`);
+            this.tutorialService.tutorialEvents$.next('blockPlaced'); // Generic event
+            this.tutorialService.tutorialEvents$.next(eventName);   // Specific event
           }
         }
       };

@@ -10,6 +10,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { GameplayService } from '../../services/gameplay.service';
 import { InterpreterService } from '../../services/interpreter.service';
 import { BlocklyWorkspaceService } from '../../services/blockly-workspace.service';
+import { TutorialService } from '../../services/tutorial.service';
 
 @Component({
   selector: 'app-game-status',
@@ -25,6 +26,7 @@ export class GameStatusComponent {
   // Injects services needed for actions.
   public interpreterService = inject(InterpreterService); // Public to check isRunning in template
   private blocklyWorkspaceService = inject(BlocklyWorkspaceService);
+  private tutorialService = inject(TutorialService);
 
   /**
    * Called when the "Run Code" button is clicked.
@@ -33,14 +35,21 @@ export class GameStatusComponent {
     const level = this.gameplay.currentLevel();
     if (!level || this.interpreterService.isRunning()) return;
 
+    // --- EMIT THE EVENT ---
+    console.log("[GameStatusComponent] Emitting 'codeRun' event.");
+    this.tutorialService.tutorialEvents$.next('codeRun');
+
     // 1. Get the code from the workspace
     const code = this.blocklyWorkspaceService.getCode();
 
     // 2. Initialize the interpreter with the code and available blocks
     this.interpreterService.init(code, level.availableBlocks);
 
-    // 3. Run the interpreter
-    this.interpreterService.run();
+setTimeout(() => {
+      // 3. Start executing the code
+      this.interpreterService.run();
+    }, 100); // Slight delay to ensure UI updates
+
   }
 
   /**

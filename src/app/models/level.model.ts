@@ -2,6 +2,7 @@
 export interface LevelTask {
   id: number;
   name: string;
+  initialCompletion?: number; // Initial completion percentage (0-100)
 }
 
 // The static definition of a level, as stored in the 'levels' collection in Firestore

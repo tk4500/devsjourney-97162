@@ -47,16 +47,19 @@ export class InterpreterService {
     // --- DYNAMIC GAMEPLAY FUNCTIONS ---
     // Only add functions to the interpreter if the level uses the corresponding block.
     if (availableBlocks.includes('dev_task')) {
+      console.log("Adding 'fazerTask' function to interpreter.");
       const taskWrapper = (taskId: number) => this.gameplayService.performTask(taskId);
       interpreter.setProperty(globalObject, 'fazerTask', interpreter.createNativeFunction(taskWrapper));
     }
 
     if (availableBlocks.includes('dev_coffee')) {
+      console.log("Adding 'tomarCafe' function to interpreter.");
       const coffeeWrapper = () => this.gameplayService.drinkCoffee();
       interpreter.setProperty(globalObject, 'tomarCafe', interpreter.createNativeFunction(coffeeWrapper));
     }
 
     if (availableBlocks.includes('dev_stamina_check')) {
+      console.log("Adding 'getStamina' function to interpreter.");
       const staminaWrapper = () => this.gameplayService.stamina();
       interpreter.setProperty(globalObject, 'getStamina', interpreter.createNativeFunction(staminaWrapper));
     }

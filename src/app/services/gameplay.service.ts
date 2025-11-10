@@ -30,8 +30,8 @@ export class GameplayService {
     // This effect will automatically check for the win condition whenever a task's completion changes.
     effect(() => {
       const currentTasks = this.tasks();
-      if (currentTasks.length > 0 && currentTasks.every(t => t.completion() === 100)) {
-        if (this.hasWon()) { // Prevent multiple triggers
+      if (currentTasks.length > 0 && currentTasks.every(t => t.completion() >= 100)) {
+        if (!this.hasWon()) { // Prevent multiple triggers
           this.handleWinCondition();
         }
       }
@@ -48,12 +48,17 @@ export class GameplayService {
     this.focus.set(level.initialFocus ?? 0);
     this.tasks.set(level.tasks.map(task => ({
       ...task,
-      completion: signal(0)
+      completion: signal(task.initialCompletion ?? 0)
     })));
     this.hasWon.set(false);
     this.hasFailed.set(false);
     this.playerSprite.set('junior-idle.jpg');
     this.taskFocusId = null;
+    console.log("GameplayService: Level setup complete.", {
+      stamina: this.stamina(),
+      focus: this.focus(),
+      tasks: this.tasks().map(t => ({ id: t.id, completion: t.completion() }))
+    });
   }
 
   /**

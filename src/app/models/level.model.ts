@@ -5,7 +5,20 @@ export interface LevelTask {
   initialCompletion?: number; // Initial completion percentage (0-100)
 }
 
-// The static definition of a level, as stored in the 'levels' collection in Firestore
+export interface ScoreObjectives {
+  blocks: number;     // Weight for the number of blocks used
+  focus?: number;      // Weight for average focus (more complex, for later)
+  time?: number;       // Weight for time taken
+  codeSize?: number;   // Weight for the generated code's string length
+}
+
+export interface ScoreWeights {
+  blocks?: number;     // Weight for the number of blocks used
+  stamina?: number;    // Weight for final stamina
+  focus?: number;      // Weight for average focus (more complex, for later)
+  time?: number;       // Weight for time taken
+  codeSize?: number;   // Weight for the generated code's string length
+}
 export interface Level {
   id: string;              // The Firestore document auto-ID
   orderId: number;         // The incremental integer for sorting
@@ -22,6 +35,8 @@ export interface Level {
 
   // Blockly configuration
   availableBlocks: string[]; // Array of block names (e.g., ['dev_task', 'controls_repeat'])
+  scoreWeights?: ScoreWeights;
+  scoreObjectives?: ScoreObjectives;
 
   // Objectives
   tasks: LevelTask[];

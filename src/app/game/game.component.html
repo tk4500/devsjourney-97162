@@ -16,3 +16,11 @@
 
   </main>
 </div>
+<app-level-complete-modal
+  [isVisible]="isLevelCompleteVisible"
+  [result]="levelResult"
+  [hasNextLevel]="hasNextLevel"
+  (playAgain)="onPlayAgain()"
+  (nextLevel)="onNextLevel()"
+  (backToMenu)="onBackToMenu()">
+</app-level-complete-modal>

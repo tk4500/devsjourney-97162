@@ -1,4 +1,11 @@
-import { Component, inject, OnInit, OnDestroy, HostListener, effect } from '@angular/core'; // <-- Import effect
+import {
+  Component,
+  inject,
+  OnInit,
+  OnDestroy,
+  HostListener,
+  effect,
+} from '@angular/core'; // <-- Import effect
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs'; // We still use this for the levelService subscription
@@ -14,25 +21,41 @@ import { Level } from '../models/level.model';
 import { GameStatusComponent } from './game-status/game-status.component';
 import { GameBlocklyComponent } from './game-blockly/game-blockly.component';
 import { GameTutorialComponent } from './game-tutorial/game-tutorial.component';
-import { TopbarComponent } from "../shared/topbar/topbar.component";
+import { TopbarComponent } from '../shared/topbar/topbar.component';
+
+import { LevelResult } from '../services/gameplay.service'; // <-- Import the interface
+import { LevelCompleteModalComponent } from './level-complete-modal/level-complete-modal.component';
 
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [ CommonModule, GameStatusComponent, GameBlocklyComponent, GameTutorialComponent, TopbarComponent ],
+  imports: [
+    CommonModule,
+    GameStatusComponent,
+    GameBlocklyComponent,
+    GameTutorialComponent,
+    TopbarComponent,
+    LevelCompleteModalComponent,
+  ],
   templateUrl: './game.component.html',
-  styleUrls: ['./game.component.css']
+  styleUrls: ['./game.component.css'],
 })
 export class GameComponent implements OnInit, OnDestroy {
   // Inject all necessary services
   private levelService: LevelService = inject(LevelService);
   public gameplayService: GameplayService = inject(GameplayService);
-  private playerProgressService: PlayerProgressService = inject(PlayerProgressService);
+  private playerProgressService: PlayerProgressService = inject(
+    PlayerProgressService
+  );
   private tutorialService: TutorialService = inject(TutorialService);
   private router: Router = inject(Router);
 
   private levelSubscription: Subscription | undefined;
   public currentLevel: Level | null = null;
+
+  public levelResult: LevelResult | null = null;
+  public isLevelCompleteVisible = false;
+  public hasNextLevel = false;
 
   constructor() {
     // --- THE FIX ---
@@ -40,7 +63,9 @@ export class GameComponent implements OnInit, OnDestroy {
     // This will automatically run whenever gameplayService.hasWon() changes.
     effect(() => {
       if (this.gameplayService.hasWon()) {
-        console.log("[GameComponent] Win condition detected via effect. Handling level completion...");
+        console.log(
+          '[GameComponent] Win condition detected via effect. Handling level completion...'
+        );
         this.handleLevelCompletion();
       }
     });
@@ -48,44 +73,72 @@ export class GameComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Subscribe to the selected level from the LevelService's BehaviorSubject
-    this.levelSubscription = this.levelService.selectedLevel$.subscribe(level => {
-      if (level) {
-        this.currentLevel = level;
-        console.log(`[GameComponent] Initializing for Level ${level.orderId}: ${level.name}`);
-        // Tell all services to set themselves up for this level
-        this.gameplayService.setupLevel(level);
-        this.tutorialService.loadTutorialForLevel(level.id);
-      } else {
-        // If no level is selected, go back to level select screen
-        console.warn("[GameComponent] No level selected. Redirecting to /levels.");
-        this.router.navigate(['/levels']);
+    this.levelSubscription = this.levelService.selectedLevel$.subscribe(
+      (level) => {
+        if (level) {
+          this.currentLevel = level;
+          console.log(
+            `[GameComponent] Initializing for Level ${level.orderId}: ${level.name}`
+          );
+          // Tell all services to set themselves up for this level
+          this.gameplayService.setupLevel(level);
+          this.tutorialService.loadTutorialForLevel(level.id);
+        } else {
+          // If no level is selected, go back to level select screen
+          console.warn(
+            '[GameComponent] No level selected. Redirecting to /levels.'
+          );
+          this.router.navigate(['/levels']);
+        }
       }
-    });
+    );
   }
 
   async handleLevelCompletion(): Promise<void> {
     if (!this.currentLevel) return;
 
-    // A. Save the player's progress
-    await this.playerProgressService.completeLevel(this.currentLevel.id, 3); // Assume 3 stars for now
+    this.levelResult = this.gameplayService.calculateScore();
+    if (!this.levelResult) return;
+    console.log(
+      `[GameComponent] Level Completed! Score: ${this.levelResult.score}, Stars: ${this.levelResult.stars}`
+    );
+    this.isLevelCompleteVisible = true;
 
+    // A. Save the player's progress
+    await this.playerProgressService.completeLevel(
+      this.currentLevel.id,
+      this.levelResult.stars,
+      this.levelResult.score
+    );
     // B. Find the next level
     const nextLevelOrderId = this.currentLevel.orderId + 1;
-    const nextLevel = await this.levelService.getLevelByOrderId(nextLevelOrderId);
+    const nextLevel = await this.levelService.getLevelByOrderId(
+      nextLevelOrderId
+    );
+    this.hasNextLevel = !!nextLevel;
+  }
 
-    // C. Navigate
+  onPlayAgain(): void {
+    this.isLevelCompleteVisible = false;
+    this.gameplayService.resetLevelState();
+  }
+
+  async onNextLevel(): Promise<void> {
+    this.isLevelCompleteVisible = false;
+    if (!this.currentLevel) return;
+
+    const nextLevelOrderId = this.currentLevel.orderId + 1;
+    const nextLevel = await this.levelService.getLevelByOrderId(nextLevelOrderId);
     if (nextLevel) {
-      console.log(`[GameComponent] Moving to next level: ${nextLevel.name}`);
-      // Show a success modal/animation for a moment before transitioning
-      setTimeout(() => {
-        this.levelService.selectLevel(nextLevel);
-      }, 2000); // 2-second delay for celebration
+      this.levelService.selectLevel(nextLevel);
     } else {
-      console.log("[GameComponent] Final level completed! Returning to level select.");
-      setTimeout(() => {
-        this.router.navigate(['/levels']);
-      }, 2000);
+      this.onBackToMenu(); // Failsafe
     }
+  }
+
+  onBackToMenu(): void {
+    this.isLevelCompleteVisible = false;
+    this.router.navigate(['/levels']);
   }
 
   // Requirement: Save progress when the user leaves the page.

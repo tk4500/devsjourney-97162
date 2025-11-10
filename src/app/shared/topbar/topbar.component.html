@@ -59,3 +59,9 @@
       <app-user-profile [user]="user"></app-user-profile>
     </ng-container>
   </p-dialog>
+<app-save-conflict-dialog
+  [isVisible]="!!saveConflictState"
+  [localProgress]="saveConflictState?.local || null"
+  [cloudProgress]="saveConflictState?.cloud || null"
+  (resolve)="onConflictResolve($event)">
+</app-save-conflict-dialog>

@@ -21,7 +21,7 @@ export class BlocklyWorkspaceService implements OnDestroy {
       console.warn("[BlocklyWorkspaceService] saveWorkspace called before workspace is created.");
       return;
     }
-    console.log(Blockly.serialization.workspaces.save(this.workspace));
+    //console.log(Blockly.serialization.workspaces.save(this.workspace));
   }
 
   /**

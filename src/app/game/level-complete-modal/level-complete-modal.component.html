@@ -1,0 +1,30 @@
+<p-dialog
+  header="Level Complete!"
+  [(visible)]="isVisible"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [closable]="false"
+  styleClass="level-complete-dialog">
+
+  <div class="content" *ngIf="result">
+    <div class="stars-container">
+      <div *ngFor="let star of starsArray; let i = index"
+           class="star"
+           [class.earned]="i < result.stars">
+      </div>
+    </div>
+
+    <div class="score">
+      <h2>Score: {{ result.score }}</h2>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="footer-buttons">
+      <button pButton pRipple type="button" label="Try Again" icon="pi pi-refresh" class="p-button-secondary" (click)="playAgain.emit()"></button>
+      <button pButton pRipple type="button" label="Level Select" icon="pi pi-list" class="p-button-secondary" (click)="backToMenu.emit()"></button>
+      <button pButton pRipple *ngIf="hasNextLevel" type="button" label="Next Level" icon="pi pi-arrow-right" class="p-button-success" (click)="nextLevel.emit()"></button>
+    </div>
+  </ng-template>
+</p-dialog>

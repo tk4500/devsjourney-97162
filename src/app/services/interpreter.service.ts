@@ -82,8 +82,9 @@ export class InterpreterService {
     // CRITICAL: Reset the gameplay state before every run.
     this.gameplayService.resetLevelState();
     this.isRunning.set(true);
-
+    this.gameplayService.setExecutionTime(0);
     const executeStep = () => {
+      this.gameplayService.addExecutionTime(delay);
       if (!this.isRunning() || !this.interpreter) {
         return; // Execution was stopped
       }

@@ -8,6 +8,12 @@ import { LevelService } from './level.service';
 import * as CryptoJS from 'crypto-js';
 import { environment } from '../../environments/environment';
 
+export interface SaveConflict {
+  local: PlayerProgress;
+  cloud: PlayerProgress;
+  resolve: (choice: 'local' | 'cloud') => void;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -15,6 +21,8 @@ export class PlayerProgressService {
   private firestore: Firestore = inject(Firestore);
   private auth: Auth = inject(Auth);
   private levelService: LevelService = inject(LevelService);
+
+  public saveConflict = new BehaviorSubject<SaveConflict | null>(null);
 
   private progressSubject = new BehaviorSubject<PlayerProgress | null>(null);
   public progress$ = this.progressSubject.asObservable();
@@ -44,6 +52,30 @@ export class PlayerProgressService {
     if (user) {
       // --- USER IS LOGGED IN ---
       const firestoreProgress = await this.fetchFirestoreProgress(user);
+
+      if (firestoreProgress && guestProgress) {
+      console.log("Conflict detected between guest and cloud progress.");
+        return new Promise(resolve => {
+          this.saveConflict.next({
+            local: guestProgress,
+            cloud: firestoreProgress,
+            resolve: async (choice) => {
+              this.saveConflict.next(null); // Hide the dialog
+              if (choice === 'local') {
+                console.log("User chose local save. Overwriting cloud...");
+                const migratedProgress = { ...guestProgress, id: user.uid };
+                await this.saveProgress(migratedProgress);
+                localStorage.removeItem('guestProgress');
+                resolve(migratedProgress);
+              } else {
+                console.log("User chose cloud save.");
+                localStorage.removeItem('guestProgress');
+                resolve(firestoreProgress);
+              }
+            }
+          });
+        });
+      }
 
       if (firestoreProgress) {
         // Requirement #4: Firestore data exists. It is the source of truth.
@@ -84,15 +116,15 @@ export class PlayerProgressService {
    * Intelligently saves to Firestore (if logged in) or encrypted localStorage (if guest).
    */
   async saveProgress(progress: PlayerProgress): Promise<void> {
+
+    console.log("Saving progress to localStorage...");
+    this.saveGuestProgress(progress);
     const currentUser = this.auth.currentUser;
 
     if (currentUser) {
       console.log("Saving progress to Firestore...");
       const progressDocRef = doc(this.firestore, `playerProgress/${currentUser.uid}`);
       await setDoc(progressDocRef, progress); // Use setDoc to overwrite the whole document, ensuring consistency.
-    } else {
-      console.log("Saving progress to localStorage...");
-      this.saveGuestProgress(progress);
     }
     // Keep the local BehaviorSubject in sync with the saved data.
     this.progressSubject.next(progress);
@@ -101,18 +133,21 @@ export class PlayerProgressService {
   /**
    * A high-level method to be called when a level is successfully completed.
    */
-  async completeLevel(levelId: string, starsEarned: 0 | 1 | 2 | 3): Promise<void> {
+  async completeLevel(levelId: string, starsEarned: 0 | 1 | 2 | 3, score: number): Promise<void> {
     const currentProgress = this.currentProgress;
     if (!currentProgress) return;
 
     const completedLevel = await this.levelService.getLevelById(levelId);
     if (!completedLevel) return;
-
+    const existingScore = currentProgress.levelData[levelId]?.score || 0;
+    const newScore = Math.max(score, existingScore);
+    const existingStars = currentProgress.levelData[levelId]?.stars || 0;
+    const newStars = Math.max(starsEarned, existingStars) as 0 | 1 | 2 | 3;
     // Update the progress for the level that was just completed
     const newLevelData: LevelProgress = {
       completed: true,
-      stars: starsEarned
-      // You could add score, time, etc. here
+      stars: newStars,
+      score: newScore
     };
 
     // Unlock the next level if it exists

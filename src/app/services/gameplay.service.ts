@@ -1,19 +1,22 @@
 import { Injectable, signal, WritableSignal, effect } from '@angular/core';
 import { Level, LevelTask } from '../models/level.model';
-import { PlayerProgressService } from './player-progress.service';
 import { inject } from '@angular/core';
-
+import { BlocklyWorkspaceService } from './blockly-workspace.service';
 // This interface represents a task with its live completion state.
 export interface LiveTask extends LevelTask {
   completion: WritableSignal<number>;
 }
 
+export interface LevelResult {
+  score: number;
+  stars: 0 | 1 | 2 | 3;
+}
 @Injectable({
   providedIn: 'root'
 })
 export class GameplayService {
-  private playerProgressService: PlayerProgressService = inject(PlayerProgressService);
-
+  private blocklyWorkspaceService: BlocklyWorkspaceService = inject(BlocklyWorkspaceService);
+  private executionTime: number = 0;
   // --- LIVE GAME STATE SIGNALS ---
   // These signals will be read by our UI components.
   public currentLevel: WritableSignal<Level | null> = signal(null);
@@ -42,6 +45,7 @@ export class GameplayService {
    * Sets up the service for a new level session. Called by the main GameComponent.
    */
   public setupLevel(level: Level): void {
+    this.executionTime = 0;
     console.log("GameplayService: Setting up for level", level.orderId);
     this.currentLevel.set(level);
     this.stamina.set(level.initialStamina ?? 100);
@@ -61,6 +65,7 @@ export class GameplayService {
     });
   }
 
+
   /**
    * Resets the current level state to its initial values.
    */
@@ -69,6 +74,13 @@ export class GameplayService {
     if (level) {
       this.setupLevel(level);
     }
+  }
+
+  public setExecutionTime(timeMs: number): void {
+    this.executionTime = timeMs;
+  }
+  public addExecutionTime(deltaMs: number): void {
+    this.executionTime += deltaMs;
   }
 
   // --- CORE ACTIONS (called by the InterpreterService) ---
@@ -111,6 +123,79 @@ export class GameplayService {
       }
     }
   }
+
+public calculateScore(): LevelResult | null {
+    const level = this.currentLevel();
+    if (!level) return null;
+    const workspace = this.blocklyWorkspaceService.workspace;
+    if (!workspace) return null;
+    console.log("Calculating score for level", level.orderId);
+    const actualBlockCount = workspace.getAllBlocks(false).length;
+    const weights = level.scoreWeights || {
+      blocks: 60,
+      time: 40
+    };
+    const ideal = level.scoreObjectives || {
+      blocks: 10,
+      time: 5000
+    };
+    let totalWeightedScore = 0;
+    let totalWeight = 0;
+    console.log("Weights:", weights, "Ideal:", ideal);
+
+    // 1. Block Count Score
+    if (weights.blocks) {
+      const actualBlockCount = workspace.getAllBlocks(false).length;
+      // Score is 100% if you use the ideal number or fewer, and decreases as you use more.
+      const blockScore = Math.max(0, 1 - ((actualBlockCount - ideal.blocks) / (2 * ideal.blocks))) * 100;
+
+      totalWeightedScore += blockScore * weights.blocks;
+      totalWeight += weights.blocks;
+      console.log(`Block Score: ${blockScore} (Actual: ${actualBlockCount}, Ideal: ${ideal.blocks})`);
+    }
+
+
+    // 2. Final Stamina Score
+    if (weights.stamina && level.usesStamina) {
+      const staminaScore = this.stamina(); // Final stamina is a direct 0-100 score
+      totalWeightedScore += staminaScore * weights.stamina;
+      totalWeight += weights.stamina;
+      console.log(`Stamina Score: ${staminaScore} (Final Stamina: ${this.stamina()})`);
+    }
+
+    // 3. Code Size Score
+    if (weights.codeSize && ideal.codeSize) {
+        const actualCodeSize = this.blocklyWorkspaceService.getCode().length;
+        const codeSizeScore = Math.max(0, 1 - ((actualCodeSize - ideal.codeSize) / ideal.codeSize)) * 100;
+        totalWeightedScore += codeSizeScore * weights.codeSize;
+        totalWeight += weights.codeSize;
+        console.log(`Code Size Score: ${codeSizeScore} (Actual: ${actualCodeSize}, Ideal: ${ideal.codeSize})`);
+    }
+
+    // 4. Execution Time Score
+    if (weights.time && ideal.time && this.executionTime > 0) {
+        const timeScore = Math.max(0, 1 - ((this.executionTime - ideal.time) / ideal.time)) * 100;
+        totalWeightedScore += timeScore * weights.time;
+        totalWeight += weights.time;
+        console.log(`Time Score: ${timeScore} (Actual: ${this.executionTime}ms, Ideal: ${ideal.time}ms)`);
+    }
+
+    // Calculate final score (normalized to a max of 10000)
+    const finalScore = totalWeight > 0 ? Math.floor((totalWeightedScore / totalWeight) * 100) : 0;
+    console.log(`Final Score: ${finalScore}`);
+
+    // Calculate Stars
+    let stars: 0 | 1 | 2 | 3 = 0;
+    if (level.scoreObjectives?.blocks) {
+      stars = Math.min(Math.max(0, level.scoreObjectives.blocks - actualBlockCount + 3), 3) as 0 | 1 | 2 | 3;
+      console.log(`Stars (based on scoreObjectives.blocks): ${stars}`);
+    }else{
+      stars = Math.min(Math.max(0, ideal.blocks - actualBlockCount + 3), 3) as 0 | 1 | 2 | 3;
+      console.log(`Stars (based on ideal.blocks): ${stars}`);
+    }
+    return { score: finalScore, stars };
+  }
+
 
   public drinkCoffee(): void {
     if (this.hasWon() || this.hasFailed()) return;

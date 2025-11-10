@@ -1,0 +1,98 @@
+/* The main dark overlay that covers the entire screen */
+.tutorial-overlay {
+  /* This is now just a container, it's not visible itself */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  /* CRITICAL: This allows clicks to pass through the container to the elements below */
+  pointer-events: none;
+}
+
+.overlay-panel {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.7);
+  /* CRITICAL: This allows the panels themselves to be clicked to advance the tutorial */
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* The box that highlights a specific UI element */
+.highlight-box {
+  position: fixed; /* Use fixed positioning to align with the overlay panels */
+  border: 3px dashed #1abc9c;
+  border-radius: 8px;
+  pointer-events: none; /* The outline itself should not be clickable */
+  z-index: 1001; /* Above the overlay panels */
+  box-sizing: border-box;
+}
+
+/* Container for Sérgio's sprite */
+.sergio-container {
+  position: fixed; /* Use fixed positioning to stay within the viewport */
+  transform: translate(-50%, -50%); /* Centers the sprite on its coordinates */
+  z-index: 1002;
+  pointer-events: none;
+}
+.sergio-container.mirrored img {
+  transform: scaleX(-1);
+}
+.sergio-container img {
+  max-width: 200px;
+  height: auto;
+}
+
+/* The text box for the explanation */
+.dialogue-box {
+  position: fixed;
+  background-color: #fff;
+  color: #333;
+  padding: 1.5rem;
+  border-radius: 10px;
+  border: 3px solid #3498db;
+  min-width: 300px; /* Give it a minimum width */
+  max-width: 450px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  z-index: 1003;
+  pointer-events: auto; /* Allow interaction with the dialogue box */
+  cursor: default;
+}
+.dialogue-box p {
+  margin: 0;
+  font-size: 1.1rem;
+}
+.next-indicator {
+  display: block;
+  text-align: right;
+  font-size: 0.8rem;
+  color: #777;
+  margin-top: 1rem;
+  opacity: 0.8;
+}
+/* ... (other styles) ... */
+
+.dialogue-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  border-top: 1px solid #eee;
+  padding-top: 0.75rem;
+}
+
+.nav-button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+.nav-button:hover {
+  background-color: #e0e0e0;
+}
+.nav-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

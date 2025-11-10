@@ -1,37 +1,67 @@
-<div class="flex flex-column">
-  <div class="flex align-items-center justify-content-center p-1">
-    <h1 class="p-3">Level: {{ blocklyservice.getLevel() }}</h1>
-    <img [src]="imagem()">
-  </div>
-  <div class="flex align-items-center justify-content-center p-2"
-    [ngStyle]="{'z-index': explain.isRun() ? 10 : 0}">
-    <p-button label="Rodar Codigo" icon="pi pi-check" (onClick)="run()" />
-  </div>
-  <div class="flex flex-row align-items-center justify-content-center">
-    <div *ngFor="let task of blocklyservice.getTask()"
-      class="card align-items-center justify-content-center px-3"
-      [ngStyle]="{'z-index': explain.isTask() ? 10 : 0}">
-      <p class="text-center my-1">{{ task.name }}</p>
-      <p class="text-center my-0"> {{task.conclusion}}/100</p>
+<div class="status-container" *ngIf="gameplay.currentLevel() as level">
+
+  <!-- Header: Level Title & Player Sprite -->
+  <div class="status-header">
+    <div class="header-text">
+      <h2>Level {{ level.orderId }}</h2>
+      <h3>{{ level.name }}</h3>
     </div>
-    <div class="card align-items-center justify-content-center px-3"
-      *ngIf="blocklyservice.isFocus">
-      <p class="text-center my-1">Focus</p>
-      <p class="text-center my-0">{{blocklyservice.getFocus()}}</p>
+    <img
+      class="player-sprite"
+      [src]="'sprites/junior/' + gameplay.playerSprite()"
+      alt="Dev Júnior">
+  </div>
+
+  <!-- Main Action Button -->
+  <div class="action-section">
+    <button
+      pButton
+      pRipple
+      id="run-button"
+      label="Run Code"
+      icon="pi pi-play"
+      class="p-button-success p-button-lg"
+      (click)="runCode()"
+      [disabled]="interpreterService.isRunning() || gameplay.hasWon() || gameplay.hasFailed()">
+    </button>
+  </div>
+
+  <!-- Tasks & Focus Section -->
+  <div class="tasks-section">
+    <h4>Objectives</h4>
+    <div *ngFor="let task of gameplay.tasks()" class="task-card">
+      <span>{{ task.name }}</span>
+      <p-progressBar [value]="task.completion()" [showValue]="false"></p-progressBar>
+    </div>
+    <div class="focus-card" *ngIf="level.usesFocus">
+      <span>Focus</span>
+      <p>{{ gameplay.focus() }}</p>
     </div>
   </div>
-  <div class="card align-items-center justify-content-center p-1"
-    *ngIf="blocklyservice.isStamina">
-    <p class="text-center my-2">Stamina</p>
-    <p-progressbar [value]="blocklyservice.getStamina()"></p-progressbar>
+
+  <!-- Resource Bars Section -->
+  <div class="resource-section">
+    <div *ngIf="level.usesStamina" class="resource-bar" pTooltip="Energy to write code. Restored by drinking coffee.">
+      <span>Stamina</span>
+      <p-progressBar [value]="gameplay.stamina()"></p-progressBar>
+    </div>
+    <!-- Placeholder for Time if you implement it -->
+    <div *ngIf="level.usesTime" class="resource-bar">
+      <span>Time</span>
+      <p-progressBar [value]="0"></p-progressBar>
+    </div>
   </div>
-  <div class="card align-items-center justify-content-center p-1"
-    *ngIf="blocklyservice.isTime">
-    <p class="text-center my-2">Time</p>
-    <p-progressbar [value]="blocklyservice.getTime()"></p-progressbar>
+
+  <!-- Game End State Panel -->
+  <div *ngIf="gameplay.hasWon() || gameplay.hasFailed()" class="end-state-panel">
+    <div *ngIf="gameplay.hasWon()" class="win-message">
+      <h2>Level Complete!</h2>
+      <p>Moving to the next level...</p>
+    </div>
+    <div *ngIf="gameplay.hasFailed()" class="fail-message">
+      <h2>Out of Stamina!</h2>
+      <p-button label="Try Again" icon="pi pi-refresh" (click)="tryAgain()"></p-button>
+    </div>
   </div>
-  <div class="flex align-items-center justify-content-center p-2"
-    *ngIf="blocklyservice.won">
-    <p-button label="Proximo Nivel" icon="pi pi-check" (onClick)="nextLvl()" />
-  </div>
+
 </div>

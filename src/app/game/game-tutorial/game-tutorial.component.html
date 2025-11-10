@@ -1,0 +1,32 @@
+<div *ngIf="tutorialService.isTutorialActive()" class="tutorial-overlay" (click)="onOverlayClick()">
+  <!-- Overlay panels remain the same -->
+  <div class="overlay-panel" id="overlay-top" (click)="onOverlayClick()"></div>
+  <div class="overlay-panel" id="overlay-bottom" (click)="onOverlayClick()"></div>
+  <div class="overlay-panel" id="overlay-left" (click)="onOverlayClick()"></div>
+  <div class="overlay-panel" id="overlay-right" (click)="onOverlayClick()"></div>
+  <div class="highlight-box" id="highlight-box-dynamic"></div>
+
+  <!-- Sérgio's position is still bound to sergio.position -->
+  <div
+    class="sergio-container"
+    *ngIf="tutorialService.currentStep()?.sergio as sergio"
+    [style]="sergio.position"
+    [class.mirrored]="sergio.mirrored">
+    <img [src]="'sprites/sergio/' + sergio.image" alt="Sérgio Sênior">
+  </div>
+
+  <!-- The Dialogue Box -->
+  <div
+    class="dialogue-box"
+    *ngIf="tutorialService.currentStep() as step"
+    [style]="step.dialoguePosition"
+    (click)="$event.stopPropagation()">
+
+    <p>{{ step.explanation }}</p>
+
+    <div class="dialogue-footer">
+      <button class="nav-button" (click)="back()" [disabled]="tutorialService.currentStepIndex === 0">Back</button>
+      <button class="nav-button" (click)="next()" *ngIf="!step.nextOn || step.nextOn === 'click'">Next</button>
+    </div>
+  </div>
+</div>

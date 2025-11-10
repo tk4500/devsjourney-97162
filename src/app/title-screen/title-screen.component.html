@@ -1,39 +1,6 @@
 <div class="title-screen-container">
   <!-- Top section for settings and auth status -->
-  <div class="top-bar">
-    <p-button icon="pi pi-cog"
-      styleClass="p-button-rounded p-button-text settings-button" size="large"
-      (click)="isSettingsVisible = true"></p-button>
-    <div class="user-profile-area">
-      <ng-container *ngIf="user$ | async as user; else guestProfile">
-        <!-- LOGGED-IN VIEW -->
-        <div class="user-profile" (click)="userMenu.toggle($event)">
-          <p-avatar *ngIf="isUserAvatar(user); else defaultAvatar"
-            [image]="user.photoURL!" shape="circle" size="large"></p-avatar>
-          <ng-template #defaultAvatar>
-            <p-avatar [label]="getUserInitial(user)" shape="circle"
-              size="large"></p-avatar>
-          </ng-template>
-          <span class="nickname">{{ getUserName(user) }}</span>
-        </div>
-        <p-menu #userMenu [model]="userMenuItems" [popup]="true"
-          appendTo="body"></p-menu>
-      </ng-container>
-
-      <ng-template #guestProfile>
-        <!-- GUEST VIEW -->
-        <div class="user-profile" (click)="userMenu.toggle($event)">
-          <p-avatar icon="pi pi-user" shape="circle" size="large"
-            styleClass="guest-avatar"></p-avatar>
-          <span class="nickname">Guest</span>
-        </div>
-        <p-menu #userMenu [model]="guestMenuItems" [popup]="true"
-          appendTo="body"></p-menu>
-      </ng-template>
-    </div>
-  </div>
-
-  <!-- Main content area for the title and menu buttons -->
+  <app-top-bar></app-top-bar>
   <div class="main-content">
     <img src="/title.png" alt="Dev's Journey Title" class="game-title-img">
 
@@ -58,33 +25,5 @@
     <div class="footer">
       <p>Version 0.1.0</p>
     </div>
-  </div>
-  <!-- Authentication Dialog -->
-  <p-dialog
-    header="{{ authDialogMode === 'login' ? 'Login' : 'Create an Account' }}"
-    [(visible)]="isAuthDialogVisible" [modal]="true"
-    [style]="{ width: '25rem' }">
-    <ng-container *ngIf="isAuthDialogVisible">
-      <app-login *ngIf="authDialogMode === 'login'"
-        (authSuccess)="onAuthSuccess()"
-        (switchToSignup)="showAuthDialog('signup')"></app-login>
-      <app-signup *ngIf="authDialogMode === 'signup'"
-        (authSuccess)="onAuthSuccess()"
-        (switchToLogin)="showAuthDialog('login')"></app-signup>
-    </ng-container>
-  </p-dialog>
-
-  <!-- Settings Dialog -->
-  <p-dialog header="Settings" [(visible)]="isSettingsVisible" [modal]="true"
-    [style]="{ width: '25rem' }">
-    <app-settings></app-settings>
-  </p-dialog>
-
-  <!-- User Profile Dialog (ADD THIS) -->
-  <p-dialog header="User Profile" [(visible)]="isUserProfileVisible"
-    [modal]="true" [style]="{ width: '25rem' }">
-    <!-- We use the async pipe again to pass the latest user data -->
-    <ng-container *ngIf="user$ | async as user">
-      <app-user-profile [user]="user"></app-user-profile>
-    </ng-container>
-  </p-dialog>
+</div>
+<div></div>

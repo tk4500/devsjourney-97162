@@ -1,21 +1,26 @@
-// Represents a single task within a level
+// Represents a single task objective within a level
 export interface LevelTask {
   id: number;
   name: string;
-  // We'll add a 'completion' property dynamically in the GameplayService
 }
 
-// The static definition of a level, stored in Firestore
+// The static definition of a level, as stored in the 'levels' collection in Firestore
 export interface Level {
-  id: string;
-  orderId: number;
-  name: string;
-  isTutorial: boolean;
+  id: string;              // The Firestore document auto-ID
+  orderId: number;         // The incremental integer for sorting
+  name: string;            // The display name of the level (e.g., "Conhecendo as Ferramentas")
+  isTutorial: boolean;     // True for official levels, false for player-made
+
+  // Gameplay mechanic flags and initial values
   initialStamina?: number;
   usesStamina?: boolean;
   initialFocus?: number;
   usesFocus?: boolean;
   usesTime?: boolean;
-  availableBlocks: string[]; // e.g., ['dev_task', 'controls_repeat']
+
+  // Blockly configuration
+  availableBlocks: string[]; // Array of block names (e.g., ['dev_task', 'controls_repeat'])
+
+  // Objectives
   tasks: LevelTask[];
 }

@@ -1,11 +1,14 @@
+// Represents the player's saved data for a single level
 export interface LevelProgress {
-  score?: number;      // The best score achieved on this level
-  completed: boolean; // True if the level has been completed
-  stars?: 0 | 1 | 2 | 3;   // Number of stars earned (0-3)
+  score?: number;
+  stars?: 0 | 1 | 2 | 3; // Number of stars earned
+  completed: boolean;
 }
 
+// Represents the main player progress document, stored in 'playerProgress/{userId}' in Firestore
 export interface PlayerProgress {
-  id?: string; // The Firestore document auto-ID (matches User UID)
-  levelData: { [levelId: string]: LevelProgress }; // Map of level IDs to their progress
-  unlockedLevels: string[]; // List of level IDs that the player has unlocked
+  id: string; // The player's Firebase Auth UID or 'guest'
+  highestLevelCompleted?: number; // The highest orderId of a completed level
+  unlockedLevels: string[];      // Array of level document IDs the player can access
+  levelData: { [levelId: string]: LevelProgress }; // A map where the key is the level's document ID
 }

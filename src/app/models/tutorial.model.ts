@@ -1,20 +1,25 @@
+// Represents a single step in a tutorial sequence, stored in 'tutorials/{levelId}'
 export interface TutorialStep {
-  explanation: string;
+  explanation: string; // The text Sérgio will say
 
-  // REFINED: Use a string ID to highlight ANY element on the page.
-  // We'll add corresponding #ids to our HTML elements.
+  // An ID of an HTML element to highlight (e.g., '#run-button', '#blockly-toolbox')
   highlightElementId?: string;
 
-  // REFINED: Flexible positioning for Sérgio.
+  // Configuration for displaying Sérgio Sênior
   sergio?: {
-    image: string;
-    // Use CSS properties directly for ultimate flexibility.
-    // e.g., { top: '50%', left: '20%' } or { bottom: '10px', right: '10px' }
-    position: { [key: string]: string };
-    mirrored?: boolean;
+    image: string; // Filename of the sprite (e.g., 'SergioPointing.png')
+    // CSS position properties for flexible placement
+    position: {
+      top?: string;
+      bottom?: string;
+      left?: string;
+      right?: string;
+    };
+    mirrored?: boolean; // If true, we'll flip the image with CSS `transform: scaleX(-1)`
   };
+  dialoguePosition?: { [key: string]: string };
 
-  // REFINED: The `nextOn` trigger is now a generic string.
-  // The TutorialComponent will listen for events with this name.
-  nextOn?: string; // e.g., 'blockPlaced:dev_task', 'codeRun'
+  // The event that will trigger the tutorial to advance to the next step
+  // 'click' is the default and means the user just clicks to continue.
+  nextOn?: 'click' | 'blockPlaced' | 'codeRun' | string; // Can be a custom event name
 }

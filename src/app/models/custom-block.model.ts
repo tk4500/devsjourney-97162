@@ -1,20 +1,8 @@
+// Represents a custom block definition, stored in 'customBlocks/{blockName}' in Firestore
 export interface CustomBlock {
-  id: string; // The block type, e.g., "dev_task"
+  // A stringified JSON object following Blockly's JSON block definition format.
+  jsonDefinition: string;
 
-  // Part 1: The visual definition for Blockly
-  blocklyJson: {
-    type: string;
-    message0: string;
-    args0?: any[];
-    previousStatement: boolean | null;
-    nextStatement: boolean | null;
-    output?: string | null;
-    colour: number;
-    tooltip: string;
-    helpUrl?: string;
-  };
-
-  // Part 2: The behavior (code generation and interpreter function)
-  generatorStub: string; // The JavaScript code the block generates
-  interpreterFunctionName: string; // The global function name the stub calls
+  // A string containing the body of the JavaScript generator function for this block.
+  generatorStub: string;
 }

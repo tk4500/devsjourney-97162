@@ -1,15 +1,19 @@
-import { Injectable, signal } from '@angular/core';
+import { LevelService } from './../../services/level.service';
+import { inject, Injectable, signal } from '@angular/core';
 import { javascriptGenerator } from 'blockly/javascript';
 import * as Blockly from 'blockly/core';
 import { Router } from '@angular/router';
+import { GameplayService } from '../../services/gameplay.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BlocklyService {
+  gameplay: GameplayService = inject(GameplayService);
   workspace: Blockly.WorkspaceSvg | null = null;
   image = signal<string>('junior_idle.jpg');
-  level = signal<number>(1);
+  levelService: LevelService = inject(LevelService);
+  level = this.gameplay.currentLevel()?.orderId;
   task_focus: number = 0;
   task: Task[] = [];
   stamina: number = 100;
@@ -20,7 +24,7 @@ export class BlocklyService {
   isTime: boolean = false;
   won: boolean = false;
   getLevel(): number {
-    return this.level();
+    return this.level ? this.level : 1;
   }
 
   constructor(private router: Router) {}
@@ -32,7 +36,17 @@ export class BlocklyService {
   }
   updateLevel(lvl: number) {
     console.log('Updating level to:', lvl);
-    this.level.set(lvl);
+    this.changePage(lvl);
+  }
+
+  async changePage(lvl: number) {
+    const newLevel = await this.levelService.getLevelByOrderId(lvl);
+    console.log('New level fetched:', newLevel);
+    if (newLevel !== null) {
+    this.gameplay.setupLevel(newLevel);
+    }else{
+      this.router.navigate(['/levels']);
+    }
   }
   gameOver() {
     console.log('Game Over');
@@ -42,8 +56,7 @@ export class BlocklyService {
   nextLevel() {
     let currentLevel: number = this.getLevel();
     currentLevel++;
-    this.level.set(currentLevel);
-    this.router.navigate(['/gameroute', this.getLevel()]);
+    this.changePage(currentLevel);
   }
   changeImg(img: string) {
     this.image.set(img);

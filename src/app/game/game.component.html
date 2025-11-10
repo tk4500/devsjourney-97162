@@ -1,9 +1,12 @@
-<app-game-explain></app-game-explain>
-<div class="grid w-full">
-  <div id="sidebar" class="col-3">
-    <app-game-status></app-game-status>
-  </div>
-  <div class="col-9 z-5">
-    <app-game-blockly></app-game-blockly>
+<app-game-tutorial></app-game-tutorial>
+<div class="game-page-container">
+    <app-top-bar></app-top-bar>
+  <div class="grid w-full h-full">
+    <div id="sidebar" class="col-3">
+      <app-game-status [gameplay]="gameplayService"></app-game-status>
+    </div>
+    <div class="col-9 z-5">
+      <app-game-blockly [level]="currentLevel"></app-game-blockly>
+    </div>
   </div>
 </div>

@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { GameplayService } from './gameplay.service';
 import { BlocklyWorkspaceService } from './blockly-workspace.service';
-
+import { AudioService } from './audio.service';
 // The 'js-interpreter' library may not have modern TypeScript types.
 // Using '@ts-ignore' is a common and acceptable way to handle this for older libraries.
 // @ts-ignore
@@ -13,6 +13,7 @@ import Interpreter from 'js-interpreter';
 export class InterpreterService {
   private gameplayService: GameplayService = inject(GameplayService);
   private blocklyWorkspaceService: BlocklyWorkspaceService = inject(BlocklyWorkspaceService);
+  private audioService: AudioService = inject(AudioService);
 
   private interpreter: any | null = null; // The interpreter instance
   public isRunning = signal(false);
@@ -78,7 +79,7 @@ export class InterpreterService {
     if (this.isRunning()) {
       return; // Already running
     }
-
+    this.audioService.playSfx('code_run');
     // CRITICAL: Reset the gameplay state before every run.
     this.gameplayService.resetLevelState();
     this.isRunning.set(true);

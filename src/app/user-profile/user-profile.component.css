@@ -1,0 +1,48 @@
+/* ... (keep all existing styles) ... */
+
+/* --- NEW STYLES for Player Stats --- */
+.player-stats {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+}
+
+.player-stats h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+  color: #333;
+  text-align: center;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  text-align: center;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.stat-item .pi {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #FFD700; /* Gold color for icons */
+}
+
+.stat-item .stat-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.stat-item .stat-label {
+  font-size: 0.8rem;
+  color: #666;
+}

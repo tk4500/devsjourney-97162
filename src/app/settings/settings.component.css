@@ -1,0 +1,70 @@
+/* Main container for the settings panel */
+.settings-container {
+  padding: 0.5rem 1rem;
+  color: #e2e8f0; /* Light text for a dark theme */
+}
+
+.settings-container h3 {
+  font-family: 'YourGameFont', sans-serif;
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: white;
+}
+
+/* Each individual setting (label + slider) */
+.setting-item {
+  margin-bottom: 2rem;
+}
+
+.setting-item label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+/* Wrapper for the icons and the slider */
+.slider-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.slider-wrapper .pi {
+  font-size: 1.2rem;
+  color: #94a3b8; /* Muted color for icons */
+}
+
+/* --- Customizing the PrimeNG Slider --- */
+
+/* This targets the p-slider component itself to take up the available space */
+:host ::ng-deep .slider-wrapper p-slider {
+  flex-grow: 1;
+}
+
+/* This targets the background bar of the slider */
+:host ::ng-deep .p-slider .p-slider-range {
+  background: #10b981; /* A nice highlight color, you can change this */
+}
+
+/* This targets the main slider track */
+:host ::ng-deep .p-slider {
+  background: #334155; /* Darker track color */
+}
+
+/* This targets the handle (the circle you drag) */
+:host ::ng-deep .p-slider .p-slider-handle {
+  height: 20px;
+  width: 20px;
+  background: #10b981; /* Match the range color */
+  border: 2px solid white;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.7); /* Add a nice glow */
+}
+
+/* Style for when you hover or drag the handle */
+:host ::ng-deep .p-slider:not(.p-disabled) .p-slider-handle:hover {
+  background: #6ee7b7; /* Lighter color on hover */
+}

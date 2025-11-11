@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, inject, Input, OnInit, Output, EventEmitter, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { User, Auth, updateProfile, updatePassword, GoogleAuthProvider, linkWithPopup, reauthenticateWithCredential, EmailAuthProvider } from '@angular/fire/auth';
@@ -9,7 +9,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { AvatarModule } from 'primeng/avatar';
 import { MessageModule } from 'primeng/message';
 import { PasswordModule } from 'primeng/password';
-
+import { PlayerProgressService } from '../services/player-progress.service'; // <-- Import
+import { PlayerProgress } from '../models/player-progress.model';
 import { ImageUploadService } from '../services/image-upload.service';
 
 @Component({
@@ -19,17 +20,24 @@ import { ImageUploadService } from '../services/image-upload.service';
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css']
 })
-export class UserProfileComponent implements OnInit {
+export class UserProfileComponent implements OnInit, OnDestroy{
+  ngOnDestroy(): void {
+    this.progressSubscription?.unsubscribe();
+  }
   @Input() user!: User;
   @Output() profileUpdated = new EventEmitter<void>();
 
+  public playerProgressService: PlayerProgressService = inject(PlayerProgressService);
   private auth: Auth = inject(Auth);
   private imageUploadService: ImageUploadService = inject(ImageUploadService);
-
+  public leaderboardRank = signal<string>('--');
   isEditMode = false;
   isLoading = false;
   successMessage: string | null = null;
   errorMessage: string | null = null;
+
+  public playerProgress: PlayerProgress | null = null;
+  private progressSubscription: any;
 
   // Form fields for edit mode
   newDisplayName = '';
@@ -40,6 +48,21 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.resetEditFields();
+    this.progressSubscription = this.playerProgressService.progress$.subscribe(progress => {
+      this.playerProgress = progress;
+    });
+    this.fetchPlayerRank();
+  }
+
+  async fetchPlayerRank(): Promise<void> {
+    console.log('Fetching player rank for user:', this.user.uid);
+    this.leaderboardRank.set('...'); // Show a loading indicator
+    const rank = await this.playerProgressService.getPlayerRank(this.user.uid, 'totalScore');
+    if (rank !== null) {
+      this.leaderboardRank.set(`#${rank}`);
+    } else {
+      this.leaderboardRank.set('N/A'); // Not ranked or not in top 1000
+    }
   }
 
   resetEditFields() {
@@ -95,9 +118,11 @@ export class UserProfileComponent implements OnInit {
           throw new Error("Image upload failed.");
         }
       }
-
+    this.playerProgress!.displayName = this.user.displayName || this.playerProgress!.displayName;
+    this.playerProgress!.photoURL = this.user.photoURL || this.playerProgress!.photoURL;
       this.successMessage = "Profile updated successfully!";
       this.profileUpdated.emit();
+      this.playerProgressService.saveProgress(this.playerProgress!); // Save any changes to progress as well
       setTimeout(() => this.toggleEditMode(false), 1500);
 
     } catch (error: any) {

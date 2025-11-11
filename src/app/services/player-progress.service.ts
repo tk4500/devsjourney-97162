@@ -1,18 +1,19 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
+import { Firestore, doc, getDoc, setDoc, collection, query, orderBy, limit, startAfter, collectionData, DocumentData, getDocs } from '@angular/fire/firestore';
 import { Auth, user, User } from '@angular/fire/auth';
-import { BehaviorSubject, from, switchMap } from 'rxjs';
+import { BehaviorSubject, from, Observable, switchMap } from 'rxjs';
 import { PlayerProgress, LevelProgress } from '../models/player-progress.model';
 import { LevelService } from './level.service';
 // Import encryption library and environment
 import * as CryptoJS from 'crypto-js';
 import { environment } from '../../environments/environment';
-
+export type LeaderboardSort = 'totalScore' | 'totalStars';
 export interface SaveConflict {
   local: PlayerProgress;
   cloud: PlayerProgress;
   resolve: (choice: 'local' | 'cloud') => void;
 }
+
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +41,69 @@ export class PlayerProgressService {
     ).subscribe(progress => {
       this.progressSubject.next(progress);
     });
+  }
+
+   // --- NEW: Method to fetch leaderboard data ---
+  getLeaderboard(sortBy: LeaderboardSort, pageSize: number, lastDoc?: DocumentData): Observable<PlayerProgress[]> {
+    const progressCollection = collection(this.firestore, 'playerProgress');
+
+    let q = query(
+      progressCollection,
+      orderBy(sortBy, 'desc'), // Sort by the chosen field, descending
+      limit(pageSize)
+    );
+
+    if (lastDoc) {
+      q = query(q, startAfter(lastDoc));
+    }
+
+    // Use collectionData to get a reactive list of leaderboard entries
+    return collectionData(q) as Observable<PlayerProgress[]>;
+  }
+
+  /**
+   * Finds the rank of a specific player on the leaderboard.
+   * @param userId The ID of the user to find.
+   * @param sortBy The metric to sort the leaderboard by.
+   * @returns The user's rank, or null if not found within the search limit.
+   */
+  async getPlayerRank(userId: string, sortBy: LeaderboardSort): Promise<number | null> {
+    const progressCollection = collection(this.firestore, 'playerProgress');
+    const PAGE_SIZE = 100; // Search in larger chunks to be faster
+    let rank = 1;
+    let lastDoc: DocumentData | undefined = undefined;
+    const MAX_PAGES_TO_SEARCH = 10; // Stop searching after 1000 players to prevent huge reads
+
+    for (let i = 0; i < MAX_PAGES_TO_SEARCH; i++) {
+      let q = query(
+        progressCollection,
+        orderBy(sortBy, 'desc'),
+        limit(PAGE_SIZE)
+      );
+      if (lastDoc) {
+        q = query(q, startAfter(lastDoc));
+      }
+
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        return null; // Reached the end of the leaderboard
+      }
+
+      const players = querySnapshot.docs;
+      for (const playerDoc of players) {
+        if (playerDoc.id === userId) {
+          return rank; // Found the player!
+        }
+        rank++;
+      }
+
+      lastDoc = players[players.length - 1];
+    }
+
+    // If the user wasn't in the top 1000, return null
+    console.warn(`Player rank for ${userId} not found within the top ${PAGE_SIZE * MAX_PAGES_TO_SEARCH}.`);
+    return null;
   }
 
   /**
@@ -112,11 +176,55 @@ export class PlayerProgressService {
   }
 
   /**
+   * Calculates the total number of stars the player has earned across all levels.
+   */
+  public getTotalStars(progress: PlayerProgress | null): number {
+    if (!progress?.levelData) return 0;
+
+    return Object.values(progress.levelData).reduce((total, level) => {
+      return total + (level.stars || 0);
+    }, 0);
+  }
+
+    /**
+   * Calculates the total score by summing up the scores from all completed levels.
+   */
+  public getTotalScore(progress: PlayerProgress | null): number {
+    if (!progress?.levelData) return 0;
+
+    return Object.values(progress.levelData).reduce((total, level) => {
+      return total + (level.score || 0);
+    }, 0);
+  }
+
+  /**
+   * Gets a sorted list of the player's top scores.
+   * @param count The number of top scores to return.
+   */
+  public getTopScores(progress: PlayerProgress | null, count: number): { levelName: string, score: number }[] {
+    if (!progress?.levelData) return [];
+
+    // This is a bit more complex as we need the level names.
+    // For now, we will return a simpler version. A full version would need to join with LevelService data.
+    return Object.entries(progress.levelData)
+      .map(([levelId, levelProgress]) => ({
+        levelName: `Level ${levelId.substring(6)}`, // Simple name for now
+        score: levelProgress.score || 0
+      }))
+      .sort((a, b) => b.score - a.score) // Sort descending
+      .slice(0, count);
+  }
+
+  /**
    * Requirement #6: A central method to save progress.
    * Intelligently saves to Firestore (if logged in) or encrypted localStorage (if guest).
    */
   async saveProgress(progress: PlayerProgress): Promise<void> {
 
+    const totalScore = this.getTotalScore(progress);
+    const totalStars = this.getTotalStars(progress);
+    progress.totalScore = totalScore;
+    progress.totalStars = totalStars;
     console.log("Saving progress to localStorage...");
     this.saveGuestProgress(progress);
     const currentUser = this.auth.currentUser;
@@ -190,6 +298,10 @@ export class PlayerProgressService {
       // Return a failsafe object to prevent the app from crashing.
       return {
         id: user?.uid || 'guest',
+        displayName: user?.displayName || 'Guest',
+        photoURL: user?.photoURL || '',
+        totalScore: 0,
+        totalStars: 0,
         unlockedLevels: [],
         levelData: {}
       };
@@ -197,6 +309,10 @@ export class PlayerProgressService {
 
     const initialProgress: PlayerProgress = {
       id: user?.uid || 'guest', // Req #2: Use 'guest' as ID if no user.
+      displayName: user?.displayName || 'Guest',
+      photoURL: user?.photoURL || '',
+      totalScore: 0,
+      totalStars: 0,
       unlockedLevels: [firstLevel.id],
       levelData: {}
     };

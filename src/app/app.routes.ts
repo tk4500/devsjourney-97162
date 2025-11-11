@@ -20,6 +20,7 @@ export const routes: Routes = [
   { path: 'title', component: TitleScreenComponent },
   { path: 'levels', component: LevelSelectComponent },
   { path: 'game', component: GameComponent },
+  { path: 'leaderboard', component: LeaderboardComponent },
   ...preroute,
   { path: '', redirectTo: '/title', pathMatch: 'full' },
   { path: '**', redirectTo: '/title' },

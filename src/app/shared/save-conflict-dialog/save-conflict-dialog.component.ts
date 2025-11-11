@@ -1,8 +1,9 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { PlayerProgress } from '../../models/player-progress.model';
+import { AudioService } from '../../services/audio.service';
 export type SaveChoice = 'local' | 'cloud';
 @Component({
 selector: 'app-save-conflict-dialog',
@@ -16,6 +17,7 @@ export class SaveConflictDialogComponent {
 @Input() cloudProgress: PlayerProgress | null = null;
 @Input() isVisible: boolean = false;
 @Output() resolve = new EventEmitter<SaveChoice>();
+protected audioService: AudioService = inject(AudioService);
 // Helper to get a summary of a progress file
 getSummary(progress: PlayerProgress | null): string {
 if (!progress) return 'No data';

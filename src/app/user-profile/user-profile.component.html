@@ -12,6 +12,26 @@
         <p>{{ user.email }}</p>
       </div>
     </div>
+        <div class="player-stats" *ngIf="playerProgress">
+      <h4>Player Stats</h4>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <i class="pi pi-star-fill"></i>
+          <span class="stat-value">{{ playerProgressService.getTotalStars(playerProgress) }}</span>
+          <span class="stat-label">Total Stars</span>
+        </div>
+        <div class="stat-item">
+          <i class="pi pi-bolt"></i>
+          <span class="stat-value">{{ playerProgressService.getTotalScore(playerProgress) }}</span>
+          <span class="stat-label">Total Score</span>
+        </div>
+        <div class="stat-item">
+          <i class="pi pi-trophy"></i>
+          <span class="stat-value">{{ leaderboardRank() }}</span> <!-- Placeholder for leaderboard rank -->
+          <span class="stat-label">Leaderboard Rank</span>
+        </div>
+      </div>
+    </div>
     <div class="view-actions">
       <p-button label="Edit Profile" icon="pi pi-pencil" (click)="toggleEditMode(true)"></p-button>
       <p-button *ngIf="!isGoogleLinked" label="Link Google Account" icon="pi pi-google" styleClass="p-button-secondary" (click)="linkGoogleAccount()" [loading]="isLoading"></p-button>

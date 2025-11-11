@@ -1,11 +1,11 @@
 <div class="top-bar">
     <p-button icon="pi pi-cog"
       styleClass="p-button-rounded p-button-text settings-button" size="large"
-      (click)="isSettingsVisible = true"></p-button>
+      (click)="isSettingsVisible = true; audioService.playSfx('ui_click')"></p-button>
     <div class="user-profile-area">
       <ng-container *ngIf="user$ | async as user; else guestProfile">
         <!-- LOGGED-IN VIEW -->
-        <div class="user-profile" (click)="userMenu.toggle($event)">
+        <div class="user-profile" (click)="userMenu.toggle($event); audioService.playSfx('ui_click')">
           <p-avatar *ngIf="isUserAvatar(user); else defaultAvatar"
             [image]="user.photoURL!" shape="circle" size="large"></p-avatar>
           <ng-template #defaultAvatar>
@@ -20,7 +20,7 @@
 
       <ng-template #guestProfile>
         <!-- GUEST VIEW -->
-        <div class="user-profile" (click)="userMenu.toggle($event)">
+        <div class="user-profile" (click)="userMenu.toggle($event); audioService.playSfx('ui_click')">
           <p-avatar icon="pi pi-user" shape="circle" size="large"
             styleClass="guest-avatar"></p-avatar>
           <span class="nickname">Guest</span>
@@ -34,7 +34,9 @@
   <p-dialog
     header="{{ authDialogMode === 'login' ? 'Login' : 'Create an Account' }}"
     [(visible)]="isAuthDialogVisible" [modal]="true"
-    [style]="{ width: '25rem' }">
+    [style]="{ width: '25rem' }"
+    (onShow)="audioService.playSfx('dialog_open')"
+    (onHide)="audioService.playSfx('dialog_close')">
     <ng-container *ngIf="isAuthDialogVisible">
       <app-login *ngIf="authDialogMode === 'login'"
         (authSuccess)="onAuthSuccess()"
@@ -47,13 +49,17 @@
 
   <!-- Settings Dialog -->
   <p-dialog header="Settings" [(visible)]="isSettingsVisible" [modal]="true"
-    [style]="{ width: '25rem' }">
+    [style]="{ width: '25rem' }"
+    (onShow)="audioService.playSfx('dialog_open')"
+    (onHide)="audioService.playSfx('dialog_close')">
     <app-settings></app-settings>
   </p-dialog>
 
   <!-- User Profile Dialog (ADD THIS) -->
   <p-dialog header="User Profile" [(visible)]="isUserProfileVisible"
-    [modal]="true" [style]="{ width: '25rem' }">
+    [modal]="true" [style]="{ width: '25rem' }"
+    (onShow)="audioService.playSfx('dialog_open')"
+    (onHide)="audioService.playSfx('dialog_close')">
     <!-- We use the async pipe again to pass the latest user data -->
     <ng-container *ngIf="user$ | async as user">
       <app-user-profile [user]="user"></app-user-profile>

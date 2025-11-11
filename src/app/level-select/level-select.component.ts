@@ -8,7 +8,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subscription, combineLatest, map, startWith, switchMap } from 'rxjs';
-
+import { AudioService } from '../services/audio.service';
 import { Level } from '../models/level.model';
 import { LevelService } from '../services/level.service';
 import { PlayerProgressService } from '../services/player-progress.service';
@@ -27,11 +27,15 @@ interface DisplayLevel extends Level {
   templateUrl: './level-select.component.html',
   styleUrl: './level-select.component.css',
 })
-export class LevelSelectComponent implements OnInit {
+export class LevelSelectComponent implements OnInit, OnDestroy {
+  ngOnDestroy(): void {
+    this.audioService.stopMusic();
+  }
   private levelService: LevelService = inject(LevelService);
   private playerProgressService: PlayerProgressService = inject(
     PlayerProgressService
   );
+  private audioService: AudioService = inject(AudioService);
   private router: Router = inject(Router);
   pageSize = 12;
   protected pageValueSubject = new BehaviorSubject<number>(4);
@@ -48,6 +52,7 @@ export class LevelSelectComponent implements OnInit {
     this.updatePageSize();
   }
   ngOnInit(): void {
+    this.audioService.playMusic('level_select');
     this.updatePageSize();
   }
 
@@ -120,11 +125,16 @@ export class LevelSelectComponent implements OnInit {
     }
   }
   selectLevel(level?: DisplayLevel) {
-    if (!level || !level.isUnlocked) return;
+    if (!level || !level.isUnlocked) {
+      this.audioService.playSfx('ui_click_soft'); // A softer sound for a disabled action
+      return;
+    }
+    this.audioService.playSfx('ui_confirm');
     this.levelService.selectLevel(level); // Set the level in the service
     this.router.navigate(['/game']); // Navigate to the generic game route
   }
   backToTitle() {
+    this.audioService.playSfx('ui_click');
     this.router.navigate(['/title']);
   }
 }

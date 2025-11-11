@@ -1,10 +1,9 @@
-<div *ngIf="tutorialService.isTutorialActive()" class="tutorial-overlay" (click)="onOverlayClick()">
-  <!-- Overlay panels remain the same -->
-  <div class="overlay-panel" id="overlay-top" (click)="onOverlayClick()"></div>
-  <div class="overlay-panel" id="overlay-bottom" (click)="onOverlayClick()"></div>
-  <div class="overlay-panel" id="overlay-left" (click)="onOverlayClick()"></div>
-  <div class="overlay-panel" id="overlay-right" (click)="onOverlayClick()"></div>
+<div *ngIf="tutorialService.isTutorialActive()" class="tutorial-overlay">
+
   <div class="highlight-box" id="highlight-box-dynamic"></div>
+
+  <!-- The "Skip" button, now in a new position -->
+  <button class="skip-button" (click)="skip()">Skip Tutorial</button>
 
   <!-- Sérgio's position is still bound to sergio.position -->
   <div
@@ -12,7 +11,7 @@
     *ngIf="tutorialService.currentStep()?.sergio as sergio"
     [style]="sergio.position"
     [class.mirrored]="sergio.mirrored">
-    <img [src]="'sprites/sergio/' + sergio.image" alt="Sérgio Sênior">
+    <img [src]="'sprites/sergio/' + sergio.image" alt="sprintes/sergio/sergio-neutral.png">
   </div>
 
   <!-- The Dialogue Box -->

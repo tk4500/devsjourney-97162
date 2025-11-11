@@ -1,0 +1,96 @@
+/* ... (container, header, title, back-button styles can be copied from level-select.css) ... */
+
+.leaderboard-content {
+  width: 100%;
+  max-width: 900px;
+  background-color: rgba(15, 23, 42, 0.8);
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sort-tabs {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid #334155;
+  padding-bottom: 1rem;
+}
+
+:host ::ng-deep .sort-tabs .p-button {
+  background-color: #334155;
+  border: 1px solid #4b5563;
+}
+:host ::ng-deep .sort-tabs .p-button.active {
+  background-color: #16a34a;
+  border-color: #16a34a;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  background-color: #1e293b;
+  color: #94a3b8;
+  border: none;
+  font-family: 'YourGameFont', sans-serif;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr {
+  background-color: transparent;
+  color: #e2e8f0;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr.current-player {
+  background-color: rgba(22, 163, 74, 0.2) !important;
+  font-weight: bold;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  border: none;
+  border-bottom: 1px solid #334155;
+  padding: 1rem;
+}
+
+.rank-cell {
+  font-family: 'YourGameFont', sans-serif;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.player-cell {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.score-cell {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+.back-button {
+  width: clamp(48px, 5vw, 64px);
+  height: clamp(48px, 5vw, 64px);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.back-button:hover:not(:disabled) {
+  transform: scale(1.1);
+}
+.back-button { background-image: var(--arrow-left); }

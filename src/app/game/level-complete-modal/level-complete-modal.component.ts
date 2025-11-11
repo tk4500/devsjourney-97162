@@ -1,8 +1,9 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { LevelResult } from '../../services/gameplay.service';
+import { AudioService } from '../../services/audio.service';
 
 @Component({
   selector: 'app-level-complete-modal',
@@ -12,6 +13,8 @@ import { LevelResult } from '../../services/gameplay.service';
   styleUrls: ['./level-complete-modal.component.css']
 })
 export class LevelCompleteModalComponent {
+
+  protected audioService: AudioService = inject(AudioService);
   @Input() result: LevelResult | null = null;
   @Input() isVisible: boolean = false;
   @Input() hasNextLevel: boolean = false;
@@ -24,4 +27,5 @@ export class LevelCompleteModalComponent {
   get starsArray(): number[] {
     return this.result ? Array(3).fill(0) : [];
   }
+
 }

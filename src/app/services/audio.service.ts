@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 type MusicTrack = 'menu' | 'level_select' | 'gameplay' | 'win' ;
-type SfxTrack = 'ui_confirm' | 'ui_click' | 'dialog_open' | 'dialog_close' | 'code_run' | 'keyboard_tick' | 'task_complete' | 'level_fail' | 'drink_coffee' | 'focus_break';
+type SfxTrack = 'ui_confirm' | 'ui_click'| 'ui_click_soft' | 'dialog_open' | 'dialog_close' | 'code_run' | 'keyboard_tick' | 'task_complete' | 'level_fail' | 'drink_coffee' | 'focus_break';
 
 @Injectable({
   providedIn: 'root'
@@ -103,14 +103,14 @@ export class AudioService {
     const filenames = {
       menu: 'music_title_screen.mp3',
       level_select: 'music_level_select.mp3',
-      gameplay: 'music_gameplay_loop.mp3',
+      gameplay: 'music_gameplay.mp3',
       win: 'music_win_jingle.mp3'
     };
     return `soundtrack/${filenames[track]}`;
   }
 
   private getSfxUrl(track: SfxTrack): string {
-    return `sfx/${track}.mp3`;
+    return `sfx/sfx_${track}.mp3`;
   }
 
   private fadeOut(duration: number = 500): Promise<void> {

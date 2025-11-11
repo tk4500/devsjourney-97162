@@ -1,40 +1,43 @@
-/* The main dark overlay that covers the entire screen */
-.tutorial-overlay {
-  /* This is now just a container, it's not visible itself */
+.tutorial-container {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   z-index: 1000;
-  /* CRITICAL: This allows clicks to pass through the container to the elements below */
   pointer-events: none;
 }
 
-.overlay-panel {
-  position: fixed;
-  background-color: rgba(0, 0, 0, 0.7);
-  /* CRITICAL: This allows the panels themselves to be clicked to advance the tutorial */
-  pointer-events: auto;
-  cursor: pointer;
-}
-
-/* The box that highlights a specific UI element */
 .highlight-box {
-  position: fixed; /* Use fixed positioning to align with the overlay panels */
+  position: fixed;
   border: 3px dashed #1abc9c;
   border-radius: 8px;
-  pointer-events: none; /* The outline itself should not be clickable */
-  z-index: 1001; /* Above the overlay panels */
-  box-sizing: border-box;
+  z-index: 1001;
+  display: none; /* Hidden by default */
 }
 
-/* Container for Sérgio's sprite */
+.skip-button {
+  position: fixed;
+  bottom: 20px; /* Position at the bottom */
+  right: 20px;  /* Position at the right */
+  z-index: 1005;
+  pointer-events: auto; /* Make sure it IS clickable */
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  background-color: rgba(44, 62, 80, 0.8);
+  border: 1px solid #7f8c8d;
+  color: white;
+  border-radius: 4px;
+  font-family: sans-serif;
+}
+.skip-button:hover {
+  background-color: rgba(52, 73, 94, 1.0);
+}
+
 .sergio-container {
-  position: fixed; /* Use fixed positioning to stay within the viewport */
-  transform: translate(-50%, -50%); /* Centers the sprite on its coordinates */
+  position: fixed;
+  transform: translate(-50%, -50%);
   z-index: 1002;
-  pointer-events: none;
 }
 .sergio-container.mirrored img {
   transform: scaleX(-1);
@@ -71,7 +74,6 @@
   margin-top: 1rem;
   opacity: 0.8;
 }
-/* ... (other styles) ... */
 
 .dialogue-footer {
   display: flex;
@@ -81,6 +83,7 @@
   border-top: 1px solid #eee;
   padding-top: 0.75rem;
 }
+
 
 .nav-button {
   padding: 0.5rem 1rem;

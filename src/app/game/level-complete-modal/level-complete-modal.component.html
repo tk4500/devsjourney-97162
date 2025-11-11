@@ -21,10 +21,10 @@
   </div>
 
   <ng-template pTemplate="footer">
-    <div class="footer-buttons">
-      <button pButton pRipple type="button" label="Try Again" icon="pi pi-refresh" class="p-button-secondary" (click)="playAgain.emit()"></button>
-      <button pButton pRipple type="button" label="Level Select" icon="pi pi-list" class="p-button-secondary" (click)="backToMenu.emit()"></button>
-      <button pButton pRipple *ngIf="hasNextLevel" type="button" label="Next Level" icon="pi pi-arrow-right" class="p-button-success" (click)="nextLevel.emit()"></button>
-    </div>
+  <div class="footer-buttons">
+    <button pButton pRipple type="button" label="Try Again" icon="pi pi-refresh" class="p-button-secondary" (click)="playAgain.emit(); audioService.playSfx('ui_click_soft')"></button>
+    <button pButton pRipple type="button" label="Level Select" icon="pi pi-list" class="p-button-secondary" (click)="backToMenu.emit(); audioService.playSfx('ui_click')"></button>
+    <button pButton pRipple *ngIf="hasNextLevel" type="button" label="Next Level" icon="pi pi-arrow-right" class="p-button-success" (click)="nextLevel.emit(); audioService.playSfx('ui_confirm')"></button>
+  </div>
   </ng-template>
 </p-dialog>

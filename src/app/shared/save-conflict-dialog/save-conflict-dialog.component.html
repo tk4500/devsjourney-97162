@@ -8,14 +8,14 @@
   <div class="conflict-container">
     <p>We found a local save file and a cloud save file. Which one would you like to use?</p>
 
-    <div class="option-card local" (click)="resolve.emit('local')">
+    <div class="option-card local" (click)="resolve.emit('local'); audioService.playSfx('ui_confirm')">
       <h4>Use Local Save</h4>
       <p>Your progress on THIS device.</p>
       <small>{{ getSummary(localProgress) }}</small>
       <div class="warning">This will overwrite your cloud save.</div>
     </div>
 
-    <div class="option-card cloud" (click)="resolve.emit('cloud')">
+    <div class="option-card cloud" (click)="resolve.emit('local'); audioService.playSfx('ui_confirm')">
       <h4>Use Cloud Save</h4>
       <p>Your progress saved to your account.</p>
       <small>{{ getSummary(cloudProgress) }}</small>

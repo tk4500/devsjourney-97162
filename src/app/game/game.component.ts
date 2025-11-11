@@ -9,7 +9,7 @@ import {
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs'; // We still use this for the levelService subscription
-
+import { AudioService } from '../services/audio.service';
 // --- Our Services ---
 import { GameplayService } from '../services/gameplay.service';
 import { PlayerProgressService } from '../services/player-progress.service';
@@ -49,7 +49,7 @@ export class GameComponent implements OnInit, OnDestroy {
   );
   private tutorialService: TutorialService = inject(TutorialService);
   private router: Router = inject(Router);
-
+  private audioService: AudioService = inject(AudioService);
   private levelSubscription: Subscription | undefined;
   public currentLevel: Level | null = null;
 
@@ -83,6 +83,7 @@ export class GameComponent implements OnInit, OnDestroy {
           // Tell all services to set themselves up for this level
           this.gameplayService.setupLevel(level);
           this.tutorialService.loadTutorialForLevel(level.id);
+          this.audioService.playMusic('gameplay');
         } else {
           // If no level is selected, go back to level select screen
           console.warn(
@@ -119,16 +120,20 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   onPlayAgain(): void {
+    this.audioService.playMusic('gameplay');
     this.isLevelCompleteVisible = false;
     this.gameplayService.resetLevelState();
   }
 
   async onNextLevel(): Promise<void> {
+    this.audioService.playSfx('ui_confirm');
     this.isLevelCompleteVisible = false;
     if (!this.currentLevel) return;
 
     const nextLevelOrderId = this.currentLevel.orderId + 1;
-    const nextLevel = await this.levelService.getLevelByOrderId(nextLevelOrderId);
+    const nextLevel = await this.levelService.getLevelByOrderId(
+      nextLevelOrderId
+    );
     if (nextLevel) {
       this.levelService.selectLevel(nextLevel);
     } else {
@@ -137,6 +142,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   onBackToMenu(): void {
+    this.audioService.playSfx('ui_click');
     this.isLevelCompleteVisible = false;
     this.router.navigate(['/levels']);
   }
@@ -153,5 +159,6 @@ export class GameComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     // This is crucial to prevent memory leaks.
     this.levelSubscription?.unsubscribe();
+    this.audioService.stopMusic();
   }
 }

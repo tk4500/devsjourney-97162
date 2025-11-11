@@ -1,1 +1,53 @@
-<p>leaderboard works!</p>
+<div class="leaderboard-container">
+  <div class="header">
+    <button class="back-button" (click)="backToTitle()"></button>
+    <h1 class="title-text">LEADERBOARD</h1>
+    <div class="placeholder"></div>
+  </div>
+
+  <div class="leaderboard-content">
+    <div class="sort-tabs">
+      <button pButton [label]="'Total Score'" [class.active]="currentSort === 'totalScore'" (click)="changeSort('totalScore')"></button>
+      <button pButton [label]="'Total Stars'" [class.active]="currentSort === 'totalStars'" (click)="changeSort('totalStars')"></button>
+    </div>
+
+    <div class="table-container">
+      <p-table [value]="(leaderboardData$ | async) || []" styleClass="p-datatable-striped">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 5rem">Rank</th>
+            <th>Player</th>
+            <th style="width: 10rem">Total Stars</th>
+            <th style="width: 10rem">Total Score</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-player let-i="rowIndex">
+          <tr [class.current-player]="player.id === auth.currentUser?.uid">
+            <td class="rank-cell">{{ (pageTrigger.value.page - 1) * PAGE_SIZE + i + 1 }}</td>
+            <td>
+              <div class="player-cell">
+                <p-avatar shape="circle">
+                  <img *ngIf="player.photoURL" [src]="player.photoURL" alt="{{ player.displayName }}" />
+                </p-avatar>
+                <span>{{ player.displayName }}</span>
+              </div>
+            </td>
+            <td>{{ player.totalStars }}</td>
+            <td class="score-cell">{{ player.totalScore | number }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="4">No players on the leaderboard yet.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <div class="pagination-controls">
+      <button class="arrow-button left" (click)="previousPage()" [disabled]="pageTrigger.value.page <= 1"></button>
+      <span>Page {{ pageTrigger.value.page }}</span>
+      <button class="arrow-button right" (click)="nextPage()" [disabled]="isLastPage"></button>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,21 @@
-<div>
+<div class="settings-container">
   <h3>Game Settings</h3>
-  <p>Sound, graphics, and other options will be configured here.</p>
+
+  <div class="setting-item">
+    <label for="music-volume">Music Volume</label>
+    <div class="slider-wrapper">
+      <i class="pi pi-volume-off"></i>
+      <p-slider id="music-volume" [(ngModel)]="musicVolume" (onChange)="onMusicVolumeChange()"></p-slider>
+      <i class="pi pi-volume-up"></i>
+    </div>
+  </div>
+
+  <div class="setting-item">
+    <label for="sfx-volume">Sound Effects Volume</label>
+    <div class="slider-wrapper">
+      <i class="pi pi-volume-off"></i>
+      <p-slider id="sfx-volume" [(ngModel)]="sfxVolume" (onChange)="onSfxVolumeChange()"></p-slider>
+      <i class="pi pi-volume-up"></i>
+    </div>
+  </div>
 </div>

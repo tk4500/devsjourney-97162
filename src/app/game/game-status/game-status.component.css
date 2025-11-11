@@ -46,7 +46,15 @@
 .action-section {
   display: flex;
 }
-
+.task-card, .focus-card {
+  background-color: #1e293b;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .action-section .p-button {
   width: 100%;
 }
@@ -71,7 +79,7 @@
   padding-bottom: 0.5rem;
 }
 
-.task-card {
+.task-card, .focus-card {
   background-color: #1F2937; /* Darker blue from mockup */
   padding: 1rem;
   border-radius: 8px;
@@ -82,6 +90,10 @@
   font-size: 1.1rem;
   display: block;
   margin-bottom: 0.5rem;
+}
+.focus-card {
+  font-weight: bold;
+  font-size: 1.1rem;
 }
 
 

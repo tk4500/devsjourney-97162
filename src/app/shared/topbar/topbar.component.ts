@@ -10,6 +10,7 @@ import { LoginComponent } from '../../auth/login/login.component';
 import { SignupComponent } from '../../auth/signup/signup.component';
 import { SettingsComponent } from '../../settings/settings.component';
 import { UserProfileComponent } from '../../user-profile/user-profile.component';
+import { AudioService } from '../../services/audio.service';
 import {
   SaveConflictDialogComponent,
   SaveChoice,
@@ -38,6 +39,7 @@ import {
   styleUrl: './topbar.component.css',
 })
 export class TopbarComponent implements OnInit {
+  protected audioService: AudioService = inject(AudioService);
   private auth: Auth = inject(Auth);
   private playerProgressService = inject(PlayerProgressService);
   public saveConflictState: SaveConflict | null = null;
@@ -51,7 +53,7 @@ export class TopbarComponent implements OnInit {
   guestMenuItems: MenuItem[] = [];
   ngOnInit() {
     this.setupMenuItems();
-    this.playerProgressService.saveConflict.subscribe(conflict => {
+    this.playerProgressService.saveConflict.subscribe((conflict) => {
       this.saveConflictState = conflict;
     });
   }
@@ -64,12 +66,18 @@ export class TopbarComponent implements OnInit {
       {
         label: 'Profile',
         icon: 'pi pi-fw pi-user',
-        command: () => (this.isUserProfileVisible = true),
+        command: () => {
+          this.audioService.playSfx('ui_click');
+          this.isUserProfileVisible = true;
+        },
       },
       {
         label: 'Logout',
         icon: 'pi pi-fw pi-sign-out',
-        command: () => this.logout(),
+        command: () => {
+          this.audioService.playSfx('ui_click');
+          this.logout();
+        },
       },
     ];
 
@@ -77,12 +85,18 @@ export class TopbarComponent implements OnInit {
       {
         label: 'Login',
         icon: 'pi pi-fw pi-sign-in',
-        command: () => this.showAuthDialog('login'),
+        command: () => {
+          this.audioService.playSfx('ui_click');
+          this.showAuthDialog('login');
+        },
       },
       {
         label: 'Sign Up',
         icon: 'pi pi-fw pi-user-plus',
-        command: () => this.showAuthDialog('signup'),
+        command: () => {
+          this.audioService.playSfx('ui_click');
+          this.showAuthDialog('signup');
+        },
       },
     ];
   }
@@ -97,6 +111,10 @@ export class TopbarComponent implements OnInit {
 
   async logout() {
     await signOut(this.auth);
+    this.playerProgressService.currentProgress!.id = 'guest';
+    this.playerProgressService.saveProgress(
+      this.playerProgressService.currentProgress!
+    );
   }
 
   isUserAvatar(user: User | null): boolean {

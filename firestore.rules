@@ -2,8 +2,64 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if false;
+
+    // --- Static Game Data Collections ---
+    // These collections are publically readable by anyone playing the game,
+    // but completely locked down from any client-side writes.
+    // Only you (via the Firebase Console or Admin SDK) can change this data.
+
+    match /levels/{levelId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /tutorials/{tutorialId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /customBlocks/{blockId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+
+    // --- Dynamic Player Data Collection ---
+    // This collection is carefully secured to protect user data.
+
+    match /playerProgress/{userId} {
+
+      // --- READ RULES ---
+      // A user can GET their own specific document.
+      allow get: if request.auth != null && request.auth.uid == userId;
+
+      // ANY authenticated user can LIST documents for the leaderboard.
+      // This is safe because our data model for playerProgress doesn't contain
+      // sensitive private information.
+      allow list: if request.auth != null;
+
+
+      // --- WRITE RULES ---
+      // A user can CREATE and UPDATE their own document, but only if the data is valid.
+      allow create, update: if request.auth != null
+                              && request.auth.uid == userId
+                              && isProgressDataValid(request.resource.data);
+
+      // Players cannot delete their own progress from the game client.
+      allow delete: if false;
+    }
+
+    // --- Helper Functions for Data Validation ---
+
+    function isProgressDataValid(data) {
+      // Ensure the core fields exist and have the correct types.
+      return data.id == request.auth.uid
+          && data.displayName is string
+          && data.photoURL is string
+          && data.totalScore is number && data.totalScore >= 0
+          && data.totalStars is number && data.totalStars >= 0
+          && data.unlockedLevels is list
+          && data.levelData is map;
     }
   }
 }

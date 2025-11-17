@@ -25,6 +25,7 @@ import { TopbarComponent } from '../shared/topbar/topbar.component';
 
 import { LevelResult } from '../services/gameplay.service'; // <-- Import the interface
 import { LevelCompleteModalComponent } from './level-complete-modal/level-complete-modal.component';
+import { GameFailModalComponent } from './game-fail-modal/game-fail-modal.component';
 
 @Component({
   selector: 'app-game',
@@ -36,6 +37,7 @@ import { LevelCompleteModalComponent } from './level-complete-modal/level-comple
     GameTutorialComponent,
     TopbarComponent,
     LevelCompleteModalComponent,
+    GameFailModalComponent
   ],
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css'],
@@ -52,6 +54,7 @@ export class GameComponent implements OnInit, OnDestroy {
   private audioService: AudioService = inject(AudioService);
   private levelSubscription: Subscription | undefined;
   public currentLevel: Level | null = null;
+  public isGameFailVisible = false;
 
   public levelResult: LevelResult | null = null;
   public isLevelCompleteVisible = false;
@@ -67,6 +70,12 @@ export class GameComponent implements OnInit, OnDestroy {
           '[GameComponent] Win condition detected via effect. Handling level completion...'
         );
         this.handleLevelCompletion();
+      }
+    });
+    effect(() => {
+      if (this.gameplayService.hasFailed()) {
+        console.log("[GameComponent] Failure condition detected. Showing fail modal.");
+        this.isGameFailVisible = true;
       }
     });
   }
@@ -93,6 +102,15 @@ export class GameComponent implements OnInit, OnDestroy {
         }
       }
     );
+  }
+
+    onTryAgain(): void {
+    this.isGameFailVisible = false;
+    // We need a slight delay to allow the dialog to close before resetting state,
+    // which prevents a visual "flicker".
+    setTimeout(() => {
+      this.gameplayService.resetLevelState();
+    }, 200);
   }
 
   async handleLevelCompletion(): Promise<void> {

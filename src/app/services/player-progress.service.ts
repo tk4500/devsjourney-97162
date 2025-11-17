@@ -117,7 +117,7 @@ export class PlayerProgressService {
       // --- USER IS LOGGED IN ---
       const firestoreProgress = await this.fetchFirestoreProgress(user);
 
-      if (firestoreProgress && guestProgress) {
+      if (firestoreProgress && guestProgress && firestoreProgress.id !== guestProgress.id) {
       console.log("Conflict detected between guest and cloud progress.");
         return new Promise(resolve => {
           this.saveConflict.next({

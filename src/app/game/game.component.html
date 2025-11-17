@@ -24,3 +24,7 @@
   (nextLevel)="onNextLevel()"
   (backToMenu)="onBackToMenu()">
 </app-level-complete-modal>
+<app-game-fail-modal
+  [isVisible]="isGameFailVisible"
+  (tryAgain)="onTryAgain()">
+</app-game-fail-modal>

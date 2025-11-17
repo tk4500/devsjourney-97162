@@ -53,11 +53,8 @@ setTimeout(() => {
 
   }
 
-  /**
-   * Called when the "Try Again" button is clicked after failing a level.
-   */
-  tryAgain(): void {
-    // Simply tell the gameplay service to reset its state.
-    this.gameplay.resetLevelState();
+  stopCode(): void {
+    this.interpreterService.stop();
   }
+
 }

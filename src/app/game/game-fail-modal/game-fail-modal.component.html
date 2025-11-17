@@ -1,0 +1,21 @@
+<p-dialog
+  header="Oh no!"
+  [(visible)]="isVisible"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [closable]="false"
+  styleClass="game-fail-dialog">
+
+  <div class="content">
+    <i class="pi pi-times-circle fail-icon"></i>
+    <h2>Out of Stamina!</h2>
+    <p>Your code stopped running. Don't worry, even senior devs need a break!</p>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="footer-buttons">
+      <button pButton pRipple type="button" label="Try Again" icon="pi pi-refresh" class="p-button-warning" (click)="tryAgain.emit(); audioService.playSfx('ui_click')"></button>
+    </div>
+  </ng-template>
+</p-dialog>

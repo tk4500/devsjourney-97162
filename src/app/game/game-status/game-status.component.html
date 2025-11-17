@@ -24,6 +24,16 @@
     (click)="runCode()"
     [disabled]="interpreterService.isRunning() || gameplay.hasWon() || gameplay.hasFailed()">
   </button>
+  <button
+    pButton
+    pRipple
+    id="stop-button"
+    label="Stop Code"
+    icon="pi pi-stop"
+    styleClass="stop-code-button"
+    (click)="stopCode()"
+    [disabled]="!interpreterService.isRunning()">
+  </button>
 </div>
 
   <!-- Tasks & Focus Section -->
@@ -60,7 +70,7 @@
     </div>
     <div *ngIf="gameplay.hasFailed()" class="fail-message">
       <h2>Out of Stamina!</h2>
-      <p-button label="Try Again" icon="pi pi-refresh" (click)="tryAgain()"></p-button>
+      <p-button label="Try Again" icon="pi pi-refresh"></p-button>
     </div>
   </div>
 

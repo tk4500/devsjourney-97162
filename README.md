@@ -1,59 +1,72 @@
-# Devsjourney97162
+-----
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.17.
+# 🎮 Dev's Journey: Simulando a Rotina do Programador
 
-## Development server
+[cite_start]**Dev's Journey** é uma Single-Page Application (SPA) e um jogo educacional focado em desmistificar a rotina profissional de um desenvolvedor de software[cite: 5, 64]. [cite_start]O projeto simula desafios reais do dia a dia da área de TI, unindo conceitos de lógica de programação com mecânicas de gamificação que exigem gerenciamento de recursos não-técnicos, como "Stamina" e "Foco"[cite: 6, 51].
 
-To start a local development server, run:
+🌐 **Jogue agora:** [devsjourney-97162.web.app](https://devsjourney-97162.web.app)
 
-```bash
-ng serve
-```
+-----
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 💡 O Problema e a Solução
 
-## Code scaffolding
+[cite_start]O mercado de TI sofre com a escassez de profissionais, muitas vezes afastados pela percepção de que a programação possui uma barreira de entrada muito alta e uma sintaxe rígida[cite: 54, 192].
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+[cite_start]Para solucionar isso, o Dev's Journey utiliza a **Aprendizagem Baseada em Jogos (Game-Based Learning)** acoplada à **Programação em Blocos**[cite: 6, 38]. [cite_start]Isso permite que os usuários foquem no raciocínio lógico e na resolução de algoritmos sem se frustrar com erros de sintaxe (como o esquecimento de um ponto e vírgula), transformando a programação em uma montagem de quebra-cabeças[cite: 55, 58].
 
-```bash
-ng generate component component-name
-```
+## ⚙️ Principais Funcionalidades
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+  * [cite_start]**Programação Visual com Blockly:** Integração profunda com o Google Blockly para a criação de algoritmos usando blocos arrastáveis[cite: 66].
+  * [cite_start]**Execução Segura em Sandbox:** Os blocos lógicos são traduzidos para JavaScript e executados em tempo real de forma isolada e segura através da biblioteca `JS-Interpreter`[cite: 67].
+  * [cite_start]**Gamificação e Gestão de Recursos:** Mecânicas dinâmicas de Stamina e Foco, simulando interrupções no workflow e exigindo que o jogador gerencie sua "energia" para entregar as tarefas[cite: 51, 151].
+  * [cite_start]**Tutoriais Interativos:** Um sistema de onboarding contextual e não-bloqueante guiado pelo mentor "Sérgio Sênior", que apresenta os conceitos lógicos[cite: 119, 120].
+  * [cite_start]**Sistema de Progressão:** Salva o progresso dinamicamente, mantendo o controle de níveis desbloqueados e pontuação geral via Leaderboard global[cite: 80, 106].
 
-```bash
-ng generate --help
-```
+## 🛠️ Tecnologias Utilizadas
 
-## Building
+[cite_start]O projeto foi construído utilizando uma stack moderna e robusta, com arquitetura orientada a serviços[cite: 70]:
 
-To build the project run:
+  * [cite_start]**Frontend:** Angular (v19) para estruturação reativa e PrimeNG para componentes de UI acessíveis e responsivos[cite: 64, 65, 205].
+  * [cite_start]**Core Lógico:** Google Blockly (Interface Visual) e JS-Interpreter (Motor de execução de código)[cite: 206].
+  * [cite_start]**Backend as a Service (BaaS):** Firebase Firestore (Banco de dados NoSQL) e Firebase Auth (Gestão de Identidade)[cite: 68, 207].
+  * [cite_start]**Armazenamento de Mídia:** API do ImgBB integrada via `ImageUploadService` para otimização de upload de avatares[cite: 69, 82].
+  * [cite_start]**Segurança:** Dados sensíveis de sessões locais são criptografados utilizando `crypto-js`[cite: 93].
 
-```bash
-ng build
-```
+## 🏗️ Arquitetura do Sistema
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+A aplicação foi rigorosamente modularizada utilizando injeção de dependências do Angular. [cite_start]O estado da aplicação é gerenciado em tempo real (utilizando *Angular Signals*) através de serviços dedicados[cite: 64, 77]:
 
-## Running unit tests
+  * [cite_start]`GameplayService`: O motor central que gerencia estados de vitória/derrota e variáveis dinâmicas do jogo[cite: 77].
+  * [cite_start]`BlocklyWorkspaceService` e `InterpreterService`: Atuam como pontes entre a interface do usuário e o ambiente de execução de código isolado[cite: 78, 79].
+  * [cite_start]**Estratégia de Cache:** Combinação de Firestore para dados persistentes na nuvem e `sessionStorage`/`localStorage` para caching de progressão e carregamento estático veloz de tutoriais e blocos customizados[cite: 74, 76, 94].
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## 📊 Impacto e Resultados
 
-```bash
-ng test
-```
+[cite_start]O sistema foi validado com usuários reais, comprovando sua eficácia como ferramenta técnica e educativa[cite: 202, 220]:
 
-## Running end-to-end tests
+  * [cite_start]**Alto Engajamento:** 87,5% dos usuários classificaram a experiência como altamente divertida e engajante (Notas 4 ou 5)[cite: 7, 134].
+  * [cite_start]**Efetividade no Aprendizado:** 75% dos participantes reportaram um claro entendimento de conceitos lógicos fundamentais (como *loops* e estruturas condicionais) após interagir com o sistema[cite: 7, 137, 153].
+  * [cite_start]O sistema comprovou sucesso em simular desafios além do código, traduzindo bem o ambiente ágil e os desafios não-técnicos da profissão[cite: 8, 141].
 
-For end-to-end (e2e) testing, run:
+## 🚀 Como Rodar o Projeto Localmente
 
-```bash
-ng e2e
-```
+1.  Clone este repositório:
+    ```bash
+    git clone https://github.com/tk4500/devsjourney-97162.git
+    ```
+2.  Instale as dependências:
+    ```bash
+    npm install
+    ```
+3.  Configure as variáveis de ambiente com suas credenciais do Firebase em `src/environments/environment.ts`.
+4.  Inicie o servidor de desenvolvimento:
+    ```bash
+    ng serve
+    ```
+5.  Acesse `http://localhost:4200` no seu navegador.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+-----
 
-## Additional Resources
+*Desenvolvido por Tarcísio Luiz Pereira Bogo.*
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+-----

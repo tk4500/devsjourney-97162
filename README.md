@@ -1,72 +1,67 @@
 -----
 
-# 🎮 Dev's Journey: Simulando a Rotina do Programador
+# 🎮 Dev's Journey
 
-[cite_start]**Dev's Journey** é uma Single-Page Application (SPA) e um jogo educacional focado em desmistificar a rotina profissional de um desenvolvedor de software[cite: 5, 64]. [cite_start]O projeto simula desafios reais do dia a dia da área de TI, unindo conceitos de lógica de programação com mecânicas de gamificação que exigem gerenciamento de recursos não-técnicos, como "Stamina" e "Foco"[cite: 6, 51].
+![Dev's Journey Cover](https://devsjourney-97162.web.app/level-select-bg.png)
 
-🌐 **Jogue agora:** [devsjourney-97162.web.app](https://devsjourney-97162.web.app)
+**Acesse o jogo em produção:** [https://devsjourney-97162.web.app](https://devsjourney-97162.web.app)
 
------
+## 📌 Sobre o Projeto
 
-## 💡 O Problema e a Solução
+**Dev's Journey** é uma aplicação web gamificada desenvolvida com o propósito de desmistificar a rotina de um desenvolvedor de software de forma interativa e visual. Atuando como meu Projeto de Conclusão de Curso (TCC) em Análise e Desenvolvimento de Sistemas , o sistema não foca apenas no ensino de lógica de programação, mas também simula os desafios não-técnicos do dia a dia da profissão, exigindo o gerenciamento de recursos como "Stamina" e "Foco".
 
-[cite_start]O mercado de TI sofre com a escassez de profissionais, muitas vezes afastados pela percepção de que a programação possui uma barreira de entrada muito alta e uma sintaxe rígida[cite: 54, 192].
+Para tornar a experiência fluida e à prova de erros de sintaxe para iniciantes, o projeto utiliza a abordagem de Programação em Blocos, permitindo que os usuários construam lógicas complexas de forma lúdica, semelhante a montar um quebra-cabeça.
 
-[cite_start]Para solucionar isso, o Dev's Journey utiliza a **Aprendizagem Baseada em Jogos (Game-Based Learning)** acoplada à **Programação em Blocos**[cite: 6, 38]. [cite_start]Isso permite que os usuários foquem no raciocínio lógico e na resolução de algoritmos sem se frustrar com erros de sintaxe (como o esquecimento de um ponto e vírgula), transformando a programação em uma montagem de quebra-cabeças[cite: 55, 58].
+## 🚀 Principais Funcionalidades
 
-## ⚙️ Principais Funcionalidades
+* **Programação Visual Segura:** Integração com o Google Blockly para construção de algoritmos visuais, eliminando frustrações com erros de sintaxe.
+* **Execução de Código em Sandbox:** Utilização do JS-Interpreter para compilar e rodar o código JavaScript gerado pelos blocos de forma segura e em tempo real no navegador.
+* **Gestão de Estado em Tempo Real:** Mecânicas de jogo (Stamina, Foco, Interrupções) gerenciadas de forma reativa durante a sessão.
+* **Sistema de Tutoriais Interativos:** Um mentor virtual ("Sérgio Sênior") guia o usuário através de interfaces sobrepostas não-bloqueantes.
+* **Persistência Híbrida de Dados:** Salvamento de progresso usando Google Firestore para usuários autenticados e localStorage (com criptografia via crypto-js) para contas de convidados.
+* **Integração de APIs:** Upload e gerenciamento de imagens de perfil utilizando a API do ImgBB.
 
-  * [cite_start]**Programação Visual com Blockly:** Integração profunda com o Google Blockly para a criação de algoritmos usando blocos arrastáveis[cite: 66].
-  * [cite_start]**Execução Segura em Sandbox:** Os blocos lógicos são traduzidos para JavaScript e executados em tempo real de forma isolada e segura através da biblioteca `JS-Interpreter`[cite: 67].
-  * [cite_start]**Gamificação e Gestão de Recursos:** Mecânicas dinâmicas de Stamina e Foco, simulando interrupções no workflow e exigindo que o jogador gerencie sua "energia" para entregar as tarefas[cite: 51, 151].
-  * [cite_start]**Tutoriais Interativos:** Um sistema de onboarding contextual e não-bloqueante guiado pelo mentor "Sérgio Sênior", que apresenta os conceitos lógicos[cite: 119, 120].
-  * [cite_start]**Sistema de Progressão:** Salva o progresso dinamicamente, mantendo o controle de níveis desbloqueados e pontuação geral via Leaderboard global[cite: 80, 106].
+## 🛠️ Tecnologias e Arquitetura
 
-## 🛠️ Tecnologias Utilizadas
+O sistema foi concebido sob uma **Arquitetura Orientada a Serviços**, garantindo alta modularidade, fácil manutenção e separação clara de responsabilidades no Frontend.
 
-[cite_start]O projeto foi construído utilizando uma stack moderna e robusta, com arquitetura orientada a serviços[cite: 70]:
+**Stack Tecnológica:**
+* **Frontend:** Angular (v19) , PrimeNG (v19).
+* **Lógica Engine:** Google Blockly , JS-Interpreter.
+* **Backend & Cloud:** Firebase (Firestore, Authentication, Hosting).
+* **Design Pattern:** Utilização extensiva de Angular Signals para reatividade eficiente da UI.
 
-  * [cite_start]**Frontend:** Angular (v19) para estruturação reativa e PrimeNG para componentes de UI acessíveis e responsivos[cite: 64, 65, 205].
-  * [cite_start]**Core Lógico:** Google Blockly (Interface Visual) e JS-Interpreter (Motor de execução de código)[cite: 206].
-  * [cite_start]**Backend as a Service (BaaS):** Firebase Firestore (Banco de dados NoSQL) e Firebase Auth (Gestão de Identidade)[cite: 68, 207].
-  * [cite_start]**Armazenamento de Mídia:** API do ImgBB integrada via `ImageUploadService` para otimização de upload de avatares[cite: 69, 82].
-  * [cite_start]**Segurança:** Dados sensíveis de sessões locais são criptografados utilizando `crypto-js`[cite: 93].
-
-## 🏗️ Arquitetura do Sistema
-
-A aplicação foi rigorosamente modularizada utilizando injeção de dependências do Angular. [cite_start]O estado da aplicação é gerenciado em tempo real (utilizando *Angular Signals*) através de serviços dedicados[cite: 64, 77]:
-
-  * [cite_start]`GameplayService`: O motor central que gerencia estados de vitória/derrota e variáveis dinâmicas do jogo[cite: 77].
-  * [cite_start]`BlocklyWorkspaceService` e `InterpreterService`: Atuam como pontes entre a interface do usuário e o ambiente de execução de código isolado[cite: 78, 79].
-  * [cite_start]**Estratégia de Cache:** Combinação de Firestore para dados persistentes na nuvem e `sessionStorage`/`localStorage` para caching de progressão e carregamento estático veloz de tutoriais e blocos customizados[cite: 74, 76, 94].
+**Estrutura de Serviços Core:**
+A arquitetura baseia-se em serviços independentes que orquestram a aplicação, como o LevelService (para caching e otimização de requisições ao banco) , o BlocklyWorkspaceService (gestão do ambiente de blocos) , e o InterpreterService (ponte de execução entre o código do usuário e as ações da UI).
 
 ## 📊 Impacto e Resultados
 
-[cite_start]O sistema foi validado com usuários reais, comprovando sua eficácia como ferramenta técnica e educativa[cite: 202, 220]:
+Durante as validações de usabilidade e eficácia educacional:
+* **87.5%** dos usuários consideraram a experiência altamente engajante.
+* **75%** dos testadores reportaram ter aprendido ou consolidado conceitos fundamentais de programação (como Loops, Condicionais e Lógica Sequencial).
+* A gestão de "Stamina" e "Foco" foi validada como uma simulação fiel do desgaste e dos desafios não-técnicos diários do desenvolvimento de software.
 
-  * [cite_start]**Alto Engajamento:** 87,5% dos usuários classificaram a experiência como altamente divertida e engajante (Notas 4 ou 5)[cite: 7, 134].
-  * [cite_start]**Efetividade no Aprendizado:** 75% dos participantes reportaram um claro entendimento de conceitos lógicos fundamentais (como *loops* e estruturas condicionais) após interagir com o sistema[cite: 7, 137, 153].
-  * [cite_start]O sistema comprovou sucesso em simular desafios além do código, traduzindo bem o ambiente ágil e os desafios não-técnicos da profissão[cite: 8, 141].
+## ⚙️ Como executar o projeto localmente
 
-## 🚀 Como Rodar o Projeto Localmente
+1. Clone o repositório:
+   bash
+   git clone [https://github.com/tk4500/devsjourney-97162.git](https://github.com/tk4500/devsjourney-97162.git)
 
-1.  Clone este repositório:
-    ```bash
-    git clone https://github.com/tk4500/devsjourney-97162.git
-    ```
+
 2.  Instale as dependências:
-    ```bash
+    bash
     npm install
-    ```
-3.  Configure as variáveis de ambiente com suas credenciais do Firebase em `src/environments/environment.ts`.
-4.  Inicie o servidor de desenvolvimento:
-    ```bash
+    
+3.  Execute o servidor de desenvolvimento:
+    bash
     ng serve
-    ```
-5.  Acesse `http://localhost:4200` no seu navegador.
+    
+4.  Navegue até http://localhost:4200/.
 
 -----
 
-*Desenvolvido por Tarcísio Luiz Pereira Bogo.*
+*Desenvolvido por [Tarcísio Bogo](https://www.google.com/search?q=https://www.linkedin.com/in/tarcisio-bogo/)* 
 
------
+
+
+***
